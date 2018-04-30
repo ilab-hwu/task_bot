@@ -1,0 +1,55 @@
+task_route_descr:
+  code: '<cmd>{{"action":"{intent}", "params":{{"shop_name":"{param}"}}, "confirmation":{confirmation}}}'
+  status:
+    disambiguation:
+      return_tts:
+        text:
+          - "Do you mean {value}?"
+        value: '(" ".join(return_value[:-1]) + " or " + return_value[-1]) if isinstance(return_value,list) else return_value'
+      resolve: "({return_value})"
+      return_cmd: '<cmd>{{"action":"{intent}", "params":{{"shop_name":"{param}"}}, "return_value":{result}, "confirmation":{confirmation}}}'
+      confirmation:
+        - 'Right! Give me second'
+
+    failure:
+      return_tts:
+        - "I am sorry *user_name*. I am afraid I can not do that"
+    clarification:
+      landmark:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has))"
+          NO: "^(?:(no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't))"
+        return_tts:
+          text:
+            - "Do you see {value}?"
+          value: '"{return_value}"'
+        return_cmd: '<cmd>{{"action":"{intent}", "params":{{"shop_name":"{param}"}}, "return_value":{result}, "confirmation":{confirmation}}}'
+        confirmation:
+          - 'awesome'
+      route_constraint:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has))"
+          NO: "^(?:(no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't))"
+        return_tts:
+          text:
+            - "Can you take the {value}?"
+          value: '"{return_value}"'
+        return_cmd: '<cmd>{{"action":"{intent}", "params":{{"shop_name":"{param}"}}, "return_value":{result}, "confirmation":{confirmation}}}'
+        confirmation:
+          - 'awesome'
+    not_found:
+      return_tts:
+        text:
+          - "I can not do this *driver*"
+    succeeded:
+      return_tts:
+        text:
+          - "Go find it now!"
