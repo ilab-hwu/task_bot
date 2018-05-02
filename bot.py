@@ -75,12 +75,12 @@ class TaskBot(Bot):
         # Check if the input was a user utterance or command
         try:
             text = json.loads(text)
-        except ValueError:
+        except:
             pass
         if not isinstance(text, dict):
 
             if intent in self.codes.keys() and not self.bot_attributes.get('status'):
-                result = code.format(confirmation='', **self.annotated_intents)
+                result = code.format(confirmation='null', **self.annotated_intents)
 
             if not result and self.bot_attributes.get('status', '').startswith('waiting') and last_bot == BOT_NAME:
                 logger.info("text: %s", text)
@@ -101,7 +101,7 @@ class TaskBot(Bot):
 
             status = self._code_part(text, 'status')
             # logger.debug("+++++++ %s", state.get('last_state.state.nlu.annotations.intents.intent'))
-            result = self.status_handler(intent,
+            result = self.status_handler((intent if intent else state.get('last_state.state.nlu.annotations.intents.intent')), 
                                          self._code_part(text, 'return_value'), param=self._code_part(text, 'param'),
                                          status=status, text=text)
 
@@ -124,21 +124,22 @@ class TaskBot(Bot):
         logger.debug(node.get('return_tts.text'))
         logger.debug("return_value %s", return_value)
         result = None
-
+       
         if not self.bot_attributes.get('status'):  # If I am not waiting for anything from the user from last turn
             result = random.choice(node.get('return_tts.text')).format(
                 value=eval(node.get('return_tts.value', '').format(
                     return_value=return_value
                 ))) if node.get('return_tts.value') else random.choice(node.get('return_tts.text'))
 
-            self.status = 'waiting-for-' + status
+            if 'return_cmd' in node:
+                self.status = 'waiting-for-' + status
             self.params = return_value
         elif self.bot_attributes.get('status') == 'waiting-for-' + status:
             for k, p in self.compile_resolution_patterns(node.get('resolve'), value=return_value):
                 if p.search(text):
                     result = node.get('return_cmd', '').format(
                         result=k if k else p.search(text).group(0),
-                        confirmation=node.get('confirmation', ''),
+                        confirmation=random.choice(node.get('confirmation', 'null')),
                         intent=intent,
                         param=param
                     )
@@ -168,11 +169,12 @@ class TaskBot(Bot):
             patt = patt.format(return_value=value)
         if value and isinstance(value, list):
             patt = patt.format(return_value=r'|'.join(value))
-
+           
         if isinstance(patt, str):
             yield None, re.compile(patt)
         elif isinstance(patt, dict):
             for k, v in patt.items():
+        #        print k ,v
                 p = re.compile(v)
                 yield k, p
 
