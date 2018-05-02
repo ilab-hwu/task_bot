@@ -73,7 +73,11 @@ class TaskBot(Bot):
         code = self.codes.get(intent, {}).get('code', {})
 
         # Check if the input was a user utterance or command
-        if not text.startswith('<cmd>'):
+        try:
+            text = json.loads(text)
+        except ValueError:
+            pass
+        if not isinstance(text, dict):
 
             if intent in self.codes.keys() and not self.bot_attributes.get('status'):
                 result = code.format(confirmation='', **self.annotated_intents)
@@ -103,65 +107,7 @@ class TaskBot(Bot):
 
 
 
-            # Check if last staged action was completed successfully to flag staged step as completed
-            #             status = self._code_parameters(text, 'status')
-            #             # logger.debug("Status: %s", status)
-            #
-            #             last_action = state.get('last_state.state.bot_states', {})
-            #             last_action = last_action.get(self.response.bot_name, {}).get('bot_attributes', {})
-            #             # pp.pprint(state)
-            #             # logger.debug("last_action: %s", last_action)
-            #
-            #             if last_action and intent == last_action.get('action_name'):
-            #                 steps_completed = last_action.get('steps_completed', [])
-            #
-            #                 if last_action.get('step_staged'):
-            #                     if status == 'failed':
-            #                         pass
-            #
-            #                 # Append previous turn's successful step to completed list
-            #                 if last_action.get('step_staged') and status == 'succeeded':
-            #                     # print "="*10
-            #                     steps_completed.append(last_action.get('step_staged'))
-            #                 # logger.debug("steps_completed %s", steps_completed, type(steps_completed))
-            #
-            # ########
-            #             steps_completed = last_action.get('steps_completed', [])
-            #
-            #             # Append previous turn's successful step to completed list
-            #             if last_action.get('step_staged') and status == 'succeeded':
-            #                 # print "="*10
-            #                 steps_completed.append(last_action.get('step_staged'))
-            #             # logger.debug("steps_completed %s", steps_completed, type(steps_completed))
-            #
-            #             # Find the remaining steps to be completed for the given task
-            #             # step_list = self.codes[intent].items()
-            #             step_list = [{k: v} for k, v in self.codes[intent].items()]
-            #             logger.debug("step_list: %s", step_list)
-            #             logger.debug("completed: %s", steps_completed)
-            #             for s in steps_completed:
-            #                 step_list.remove(s)
-            #             logger.debug("STEP_LIST: %s", step_list)
-            #
-            #             # Check if there are any more steps required for this action
-            #             # Get the next step from the leftover steps for this action and stage it
-            #             if not step_list:
-            #                 next_step = {}
-            #             else:
-            #                 next_step = step_list.pop(0)
-            #
-            #             logger.info("intent: %s, steps_completed: %s, next_step: %s", intent, steps_completed, next_step)
-            #
-            #             self.response.bot_params = {'action_name': intent,
-            #                                         'steps_completed': steps_completed,
-            #                                         'step_staged': next_step}
-            #
-            #             # Return the code of the next step for this action
-            #             # return next_step.get('code')
-            #             if next_step:
-            #                 r = [v for _, v in next_step.items()][0]
-            #                 r = r.get('code', '').format(**annotated_intents)
-            #                 return r
+
         print "RESULT: ", result
         self.response.bot_params = {'action_name': intent,
                                     'status': self.status,
@@ -205,13 +151,8 @@ class TaskBot(Bot):
             return t.get('params').get(param)
 
     def _code_part(self, input, key):
-        if input.startswith('<cmd>'):
-            text = input.split('<cmd>', 1)[1]
-            # print text, type(text)
-            if isinstance(text, (str, unicode)):
-                text = json.loads(text)
-            # print text, type(text)
-            return text.get(key)
+        if isinstance(input, dict):
+            return input.get(key)
 
     # @staticmethod
     # def _ensure_return_value_type(value):

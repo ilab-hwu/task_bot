@@ -1,5 +1,5 @@
 task_route_descr:
-  code: '<cmd>{{"action":"{intent}", "params":{{"shop_name":"{param}"}}, "confirmation":{confirmation}}}'
+  code: '{{"action":"{intent}", "params":{{"shop_name":"{param}"}}, "confirmation":{confirmation}, "command":"execute"}}'
   status:
     disambiguation:
       return_tts:
@@ -7,7 +7,7 @@ task_route_descr:
           - "Do you mean {value}?"
         value: '(" ".join(return_value[:-1]) + " or " + return_value[-1]) if isinstance(return_value,list) else return_value'
       resolve: "({return_value})"
-      return_cmd: '<cmd>{{"action":"{intent}", "params":{{"shop_name":"{param}"}}, "return_value":{result}, "confirmation":{confirmation}}}'
+      return_cmd: '{{"action":"{intent}", "params":{{"shop_name":"{param}"}}, "return_value":{result}, "confirmation":{confirmation}, "command":"execute"}}'
       confirmation:
         - 'Right! Give me second'
 
@@ -27,7 +27,7 @@ task_route_descr:
           text:
             - "Do you see {value}?"
           value: '"{return_value}"'
-        return_cmd: '<cmd>{{"action":"{intent}", "params":{{"shop_name":"{param}"}}, "return_value":{result}, "confirmation":{confirmation}}}'
+        return_cmd: '{{"action":"{intent}", "params":{{"shop_name":"{param}"}}, "return_value":{result}, "confirmation":{confirmation}, "command":"execute"}}'
         confirmation:
           - 'awesome'
       route_constraint:
@@ -42,7 +42,7 @@ task_route_descr:
           text:
             - "Can you take the {value}?"
           value: '"{return_value}"'
-        return_cmd: '<cmd>{{"action":"{intent}", "params":{{"shop_name":"{param}"}}, "return_value":{result}, "confirmation":{confirmation}}}'
+        return_cmd: '{{"action":"{intent}", "params":{{"shop_name":"{param}"}}, "return_value":{result}, "confirmation":{confirmation}, "command":"execute"}}'
         confirmation:
           - 'awesome'
     not_found:
