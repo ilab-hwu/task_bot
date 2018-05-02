@@ -53,7 +53,7 @@ class TaskBot(Bot):
         request_data = DictQuery(request_data)
         # pp.pprint(request_data['current_state'])
         pp.pprint(request_data.get('current_state'))
-        self.response.result = [self.get_answer(request_data.get('current_state'))]
+        self.response.result = self.get_answer(request_data.get('current_state'))
 
         logger.debug("RESULT: %s", self.response.toJSON())
         # self.response.result = "do you like music"
