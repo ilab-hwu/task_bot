@@ -68,5 +68,5 @@ task_route_descr:
         return_tts:
           text:
             - "To get there ask an actual human and stop buggering me {value}"
-          value: "puny user"
+          value: '"puny human"'
 
