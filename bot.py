@@ -92,7 +92,7 @@ class TaskBot(Bot):
                 result = self.status_handler((intent if intent
                                               else state.get('last_state.state.nlu.annotations.intents.intent')),
                                              return_value=self.bot_attributes.get('params'),
-                                             param=self._code_part(text, 'shop_name'),
+                                             param=self._code_part(text, 'params.shop_name'),
                                              status=status, text=text)
 
         else:
@@ -102,7 +102,7 @@ class TaskBot(Bot):
             status = self._code_part(text, 'status')
             # logger.debug("+++++++ %s", state.get('last_state.state.nlu.annotations.intents.intent'))
             result = self.status_handler((intent if intent else state.get('last_state.state.nlu.annotations.intents.intent')), 
-                                         self._code_part(text, 'return_value'), param=self._code_part(text, 'param'),
+                                         self._code_part(text, 'return_value'), param=self._code_part(text, 'params.shop_name'),
                                          status=status, text=text)
 
 
@@ -153,6 +153,7 @@ class TaskBot(Bot):
 
     def _code_part(self, input, key):
         if isinstance(input, dict):
+            input = DictQuery(input)
             return input.get(key)
 
     # @staticmethod
