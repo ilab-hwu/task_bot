@@ -92,7 +92,7 @@ class TaskBot(Bot):
                 result = self.status_handler((intent if intent
                                               else state.get('last_state.state.nlu.annotations.intents.intent')),
                                              return_value=self.bot_attributes.get('params'),
-                                             param=self._code_part(text, 'param'),
+                                             param=self._code_part(text, 'shop_name'),
                                              status=status, text=text)
 
         else:

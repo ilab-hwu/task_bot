@@ -55,6 +55,17 @@ task_route_descr:
           - "Go find it now!"
     execute:
       route_description:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has))"
+          NO: "^(?:(no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't))"
+        return_cmd: '{{"action":"{intent}", "params":{{"shop_name":"{param}"}}, "return_value":"{result}", "confirmation":"{confirmation}", "command":"execute"}}'
+        confirmation:
+          - 'Go forth then my child'
         return_tts:
           text:
-            - "To get there ask an actual human and stop buggering me"
+            - "To get there ask an actual human and stop buggering me {value}"
+          value: 'puny user'
