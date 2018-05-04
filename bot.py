@@ -166,11 +166,14 @@ class TaskBot(Bot):
     @staticmethod
     def compile_resolution_patterns(patt, value=None):
         # logger.debug("patt %s value %s patt_type %s", patt, value, type(patt))
-        if value and isinstance(value, str):
-            patt = patt.format(return_value=value)
-        if value and isinstance(value, list):
-            patt = patt.format(return_value=r'|'.join(value))
-           
+        try:
+            if value and isinstance(value, str):
+                patt = patt.format(return_value=value)
+            if value and isinstance(value, list):
+                patt = patt.format(return_value=r'|'.join(value))
+        except:
+            pass
+   
         if isinstance(patt, str):
             yield None, re.compile(patt)
         elif isinstance(patt, dict):
