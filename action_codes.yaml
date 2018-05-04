@@ -53,3 +53,8 @@ task_route_descr:
       return_tts:
         text:
           - "Go find it now!"
+    execute:
+      route_description:
+        return_tts:
+          text:
+            - "To get there ask an actual human and stop buggering me"
