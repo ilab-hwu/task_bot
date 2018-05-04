@@ -64,8 +64,9 @@ task_route_descr:
           (do|does|am|is|are|have|has)(n't| not)|ain't))"
         return_cmd: '{{"action":"{intent}", "params":{{"shop_name":"{param}"}}, "return_value":"{result}", "confirmation":"{confirmation}", "command":"execute"}}'
         confirmation:
-          - 'Go forth then my child'
+          - "Go forth then my child"
         return_tts:
           text:
             - "To get there ask an actual human and stop buggering me {value}"
-          value: 'puny user'
+          value: "puny user"
+
