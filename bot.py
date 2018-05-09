@@ -141,7 +141,7 @@ class TaskBot(Bot):
             for k, p in self.compile_resolution_patterns(node.get('resolve'), value=return_value):
                 if p.search(text):
                     result = node.get('return_cmd', '').format(
-                        result=k if k else p.search(text).group(0),
+                        result=json.dumps(k) if not isinstance(k, str) else k if k else p.search(text).group(0),
                         confirmation=random.choice(node.get('confirmation', 'null')),
                         intent=intent,
                         param=param
