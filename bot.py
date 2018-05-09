@@ -105,7 +105,10 @@ class TaskBot(Bot):
                                          self._code_part(text, 'return_value'), param=self._code_part(text, 'params.shop_name'),
                                          status=status, text=text)
 
-
+        try:
+            result = json.loads(result)
+        except:
+            pass
 
 
         print "RESULT: ", result
@@ -125,7 +128,7 @@ class TaskBot(Bot):
         logger.debug("return_value %s", return_value)
         result = None
        
-        if not self.bot_attributes.get('status'):  # If I am not waiting for anything from the user from last turn
+        if not self.bot_attributes.get('status'):  # If I am not waiting for anything from the user from last how can turn
             result = random.choice(node.get('return_tts.text')).format(
                 value=eval(node.get('return_tts.value', '').format(
                     return_value=return_value
