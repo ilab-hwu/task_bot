@@ -1,5 +1,6 @@
 task_route_descr:
   code: '{{"action": "{intent}", "params": {{"shop_name": "{param}"}}, "confirmation":{confirmation}, "command":"execute"}}'
+  confirmation: 'null'
   status:
     disambiguation:
       return_tts:
@@ -69,4 +70,6 @@ task_route_descr:
           text:
             - "To get there ask an actual human and stop buggering me {value}"
           value: '". Do you need anything else?"'
-
+task_goodbye:
+  code: '{{"action": "{intent}", "params": {{}}, "confirmation":"{confirmation}", "command":"execute"}}'
+  confirmation: "Have a great day my friend!"

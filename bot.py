@@ -60,7 +60,7 @@ class TaskBot(Bot):
         return [self.response.toJSON()]
 
     def get_answer(self, state):
-        result = None
+        result = ''
         state = DictQuery(state)
         text = state.get('state.input.text')
         intent = state.get('state.nlu.annotations.intents.intent')
@@ -71,6 +71,7 @@ class TaskBot(Bot):
             .get('bot_attributes', {})
 
         code = self.codes.get(intent, {}).get('code', {})
+        task_intent = ''
 
         # Check if the input was a user utterance or command
         try:
@@ -79,18 +80,19 @@ class TaskBot(Bot):
             pass
         if not isinstance(text, dict):
 
-            if intent in self.codes.keys() and not self.bot_attributes.get('status'):
-                result = code.format(confirmation='null', **self.annotated_intents)
+            if intent in self.codes.keys() and (not self.bot_attributes.get('status') or
+                                                self.bot_attributes.get('action_name') != intent):
+                result = code.format(confirmation=self.codes.get(intent, {}).get('confirmation', ''), **self.annotated_intents)
 
-            if not result and self.bot_attributes.get('status', '').startswith('waiting') and last_bot == BOT_NAME:
+            if not result and self.bot_attributes.get('status', '').startswith('waiting'):  # and last_bot == BOT_NAME:
                 logger.info("text: %s", text)
 
                 # Get the status from the previous turn (since input text is simple string)
                 status = self.bot_attributes.get('status', '').split('-')[-1]
                 logger.info("STATUS: %s", status)
-
-                result = self.status_handler((intent if intent
-                                              else state.get('last_state.state.nlu.annotations.intents.intent')),
+                task_intent = (intent if (intent and intent.startswith('task')) else
+                               self.bot_attributes.get('action_name'))
+                result = self.status_handler(task_intent,
                                              return_value=self.bot_attributes.get('params'),
                                              param=self._code_part(text, 'params.shop_name'),
                                              status=status, text=text)
@@ -101,21 +103,25 @@ class TaskBot(Bot):
 
             status = self._code_part(text, 'status')
             # logger.debug("+++++++ %s", state.get('last_state.state.nlu.annotations.intents.intent'))
-            result = self.status_handler((intent if intent else state.get('last_state.state.nlu.annotations.intents.intent')), 
+            task_intent = intent if (intent and intent.startswith('task')) else self.bot_attributes.get('action_name')
+            logger.debug("INTENT %s, TASK_INTENT %s", intent, task_intent)
+            result = self.status_handler(task_intent,
                                          self._code_part(text, 'return_value'), param=self._code_part(text, 'params.shop_name'),
                                          status=status, text=text)
 
         try:
             result = json.loads(result)
         except:
-            pass
+            logger.debug("Output %s was a String", result)
 
 
         print "RESULT: ", result
-        self.response.bot_params = {'action_name': intent,
-                                    'status': self.status,
-                                    'params': self.params}
-
+#        self.response.bot_params = {'action_name': intent,
+#                                    'status': self.status,
+#                                    'params': self.params}
+        self.response.bot_params['status'] = self.status
+        self.response.bot_params['params'] = self.params
+        self.response.bot_params['action_name'] = task_intent
         return result
 
     def status_handler(self, intent, return_value, status, param, text=None):
@@ -127,8 +133,8 @@ class TaskBot(Bot):
         logger.debug(node.get('return_tts.text'))
         logger.debug("return_value %s", return_value)
         result = None
-       
-        if not self.bot_attributes.get('status'):  # If I am not waiting for anything from the user from last how can turn
+
+        if not self.bot_attributes.get('status'):  # If I am not waiting for anything from the user from last turn
             result = random.choice(node.get('return_tts.text')).format(
                 value=eval(node.get('return_tts.value', '').format(
                     return_value=return_value
