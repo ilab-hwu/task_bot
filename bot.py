@@ -41,7 +41,7 @@ class TaskBot(Bot):
         with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'action_codes.yaml')) as fin:
             self.codes = yaml.load(fin)
 
-            # print "Loaded codes: ", self.codes
+#            print "Loaded codes: ", self.codes
 
     def get(self):
         pass
@@ -82,7 +82,9 @@ class TaskBot(Bot):
 
             if intent in self.codes.keys() and (not self.bot_attributes.get('status') or
                                                 self.bot_attributes.get('action_name') != intent):
-                result = code.format(confirmation=self.codes.get(intent, {}).get('confirmation', ''), **self.annotated_intents)
+                result = code.format(confirmation=self.codes.get(intent, {}).get('confirmation',
+                                                                                 ''),
+                                     **self.annotated_intents)
 
             if not result and self.bot_attributes.get('status', '').startswith('waiting'):  # and last_bot == BOT_NAME:
                 logger.info("text: %s", text)
@@ -92,9 +94,10 @@ class TaskBot(Bot):
                 logger.info("STATUS: %s", status)
                 task_intent = (intent if (intent and intent.startswith('task')) else
                                self.bot_attributes.get('action_name'))
+                logger.debug("INTENT %s, TASK_INTENT %s", intent, task_intent)
                 result = self.status_handler(task_intent,
                                              return_value=self.bot_attributes.get('params'),
-                                             param=self._code_part(text, 'params.shop_name'),
+                                             param=self._code_part(text, 'params.place_frame'),
                                              status=status, text=text)
 
         else:
@@ -106,7 +109,8 @@ class TaskBot(Bot):
             task_intent = intent if (intent and intent.startswith('task')) else self.bot_attributes.get('action_name')
             logger.debug("INTENT %s, TASK_INTENT %s", intent, task_intent)
             result = self.status_handler(task_intent,
-                                         self._code_part(text, 'return_value'), param=self._code_part(text, 'params.shop_name'),
+                                         self._code_part(text, 'return_value'),
+                                         param=self._code_part(text, 'params.place_frame'),
                                          status=status, text=text)
 
         try:
