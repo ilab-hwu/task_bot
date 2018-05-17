@@ -69,6 +69,7 @@ class TaskBot(Bot):
         self.bot_attributes = state.get('state.bot_states', {}) \
             .get(self.response.bot_name, {}) \
             .get('bot_attributes', {})
+        self.user_id = state.get('user_id')
 
         code = self.codes.get(intent, {}).get('code', {})
         task_intent = ''
@@ -84,6 +85,7 @@ class TaskBot(Bot):
                                                 self.bot_attributes.get('action_name') != intent):
                 result = code.format(confirmation=self.codes.get(intent, {}).get('confirmation',
                                                                                  ''),
+                                     user_id=self.user_id,
                                      **self.annotated_intents)
 
             if not result and self.bot_attributes.get('status', '').startswith('waiting'):  # and last_bot == BOT_NAME:
@@ -97,7 +99,9 @@ class TaskBot(Bot):
                 logger.debug("INTENT %s, TASK_INTENT %s", intent, task_intent)
                 result = self.status_handler(task_intent,
                                              return_value=self.bot_attributes.get('params'),
-                                             param=self._code_part(text, 'params.place_frame'),
+                                             param=self._code_part(text, 'params.place_frame') if
+                                             self._code_part(text, 'params.place_frame') else
+                                             self.bot_attributes.get('params'),
                                              status=status, text=text)
 
         else:
@@ -141,7 +145,7 @@ class TaskBot(Bot):
         if not self.bot_attributes.get('status'):  # If I am not waiting for anything from the user from last turn
             result = random.choice(node.get('return_tts.text')).format(
                 value=eval(node.get('return_tts.value', '').format(
-                    return_value=return_value
+                    return_value=return_value, options=node.get('return_tts.options')
                 ))) if node.get('return_tts.value') else random.choice(node.get('return_tts.text'))
 
             if 'return_cmd' in node:
