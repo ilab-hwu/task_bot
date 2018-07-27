@@ -1,5 +1,5 @@
 task_route_descr:
-  code: '{{"action": "{intent}", "params": {{"place_frame": "{param}", "person_frame": "{user_id}"}}, "confirmation":{confirmation}, "command":"execute"}}'
+  code: '{{"action": "{intent}", "params": {{"place_frame": "{param}", "person_frame": "{user_id}"}}, "confirmation":{confirmation}, "command":"execute", "task_id":"{task_id}"}}'
   confirmation: 'null'
   status:
     disambiguation:
@@ -8,9 +8,9 @@ task_route_descr:
           - "Do you mean {value}?"
         value: '(" ".join(return_value[:-1]) + " or " + return_value[-1]) if isinstance(return_value,list) else return_value'
       resolve: "({return_value})"
-      return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":"{result}", "confirmation":"{confirmation}", "command":"execute"}}'
+      return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":"{result}", "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
       confirmation:
-        - 'Right! Give me second'
+        - 'Right! Give me a second'
 
     failure:
       return_tts:
@@ -28,7 +28,7 @@ task_route_descr:
           text:
             - "Do you see {value}?"
           value: '"{return_value}"'
-        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute"}}'
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
         confirmation:
           - 'awesome'
       route_same_region:
@@ -43,7 +43,7 @@ task_route_descr:
           text:
             - "{value} is nearby. do you want me to guide you?"
           value: '"{return_value}"'
-        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute"}}'
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
         confirmation:
           - 'awesome'
       route_different_region:
@@ -56,9 +56,9 @@ task_route_descr:
           (do|does|am|is|are|have|has)(n't| not)|ain't))"
         return_tts:
           text:
-            - "It's not here. You need to {value}. Would you like me to show you the way to go to the shop ?" 
+            - "It's not here. You need to {value}. Would you like me to show you?" 
           value: '"{return_value}"'
-        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute"}}'
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
         confirmation:
           - 'awesome'
       route_confirm:
@@ -72,7 +72,7 @@ task_route_descr:
         return_tts:
           text:
             - "Have you seen where you have to go ?"
-        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute"}}'
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
         confirmation:
           - 'awesome'
       route_repeat:
@@ -86,7 +86,7 @@ task_route_descr:
         return_tts:
           text:
             - "Should I show you the direction again ?"
-        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute"}}'
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
         confirmation:
           - 'awesome'
       route_constraint:
@@ -101,7 +101,7 @@ task_route_descr:
           text:
             - "Can you take the {value}?"
           value: '"{return_value}"'
-        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute"}}'
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
         confirmation:
           - 'awesome'
     verbalisation:
@@ -172,7 +172,7 @@ task_route_descr:
           NO: "^(?:(no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
           (do|does|am|is|are|have|has)(n't| not)|ain't))"
-        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute"}}'
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
         confirmation:
           - "Go forth then my child"
         return_tts:
@@ -180,5 +180,5 @@ task_route_descr:
             - "To get there ask an actual human and stop buggering me {value}"
           value: '". Do you need anything else?"'
 task_goodbye:
-  code: '{{"action": "{intent}", "params": {{}}, "confirmation":"{confirmation}", "command":"execute"}}'
+  code: '{{"action": "{intent}", "params": {{}}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
   confirmation: "Have a great day my friend!"

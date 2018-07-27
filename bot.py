@@ -5,7 +5,7 @@ import pprint
 import random
 import re
 from types import NoneType
-
+import uuid
 import yaml
 from flask import Flask, request
 from flask_restful import Api
@@ -28,7 +28,7 @@ logging.basicConfig(level=logging.DEBUG,
                     )
 
 logger = logging.getLogger(__name__)
-
+TASK_STACK = []
 
 class TaskBot(Bot):
     def __init__(self):
@@ -83,23 +83,28 @@ class TaskBot(Bot):
 
             if intent in self.codes.keys() and (not self.bot_attributes.get('status') or
                                                 self.bot_attributes.get('action_name') != intent):
-                result = code.format(confirmation=self.codes.get(intent, {}).get('confirmation',
-                                                                                 ''),
+                task_id = uuid.uuid4()  # New task ID
+                logger.info("Generating new task ID: %s", task_id)
+                result = code.format(confirmation=self.codes.get(intent, {}).get('confirmation', ''),
                                      user_id=self.user_id,
+                                     task_id=task_id,
                                      **self.annotated_intents)
+                # Save task id in the stack
+                TASK_STACK.append(task_id)
 
             if not result and self.bot_attributes.get('status', '').startswith('waiting'):  # and last_bot == BOT_NAME:
                 logger.info("text: %s", text)
-
+                task_id = TASK_STACK[-1]  # TODO concurrency
                 # Get the status from the previous turn (since input text is simple string)
                 status = self.bot_attributes.get('status', '').split('-')[-1]
                 logger.info("STATUS: %s", status)
                 task_intent = (intent if (intent and intent.startswith('task')) else
                                self.bot_attributes.get('action_name'))
                 logger.debug("INTENT %s, TASK_INTENT %s", intent, task_intent)
-                result = self.status_handler(task_intent,
+                result = self.status_handler(task_intent, task_id=task_id,
                                              return_value=self.bot_attributes.get('params'),
-                                             param=self._code_part(text, 'params.place_frame') if
+                                             param=self._code_part(text,
+                                                                   'params.place_frame') if
                                              self._code_part(text, 'params.place_frame') else
                                              self.bot_attributes.get('params'),
                                              status=status, text=text)
@@ -109,13 +114,15 @@ class TaskBot(Bot):
             logger.info("text: %s", text)
 
             status = self._code_part(text, 'status')
+            task_id = self._code_part(text, 'task_id')
             # logger.debug("+++++++ %s", state.get('last_state.state.nlu.annotations.intents.intent'))
             task_intent = intent if (intent and intent.startswith('task')) else self.bot_attributes.get('action_name')
             logger.debug("INTENT %s, TASK_INTENT %s", intent, task_intent)
             result = self.status_handler(task_intent,
                                          self._code_part(text, 'return_value'),
-                                         param=self._code_part(text, 'params.place_frame'),
-                                         status=status, text=text)
+                                         param=self._code_part(text,
+                                                               'params.place_frame'),
+                                         status=status, text=text, task_id=task_id)
 
         try:
             result = json.loads(result)
@@ -132,7 +139,8 @@ class TaskBot(Bot):
         self.response.bot_params['action_name'] = task_intent
         return result
 
-    def status_handler(self, intent, return_value, status, param, text=None):
+    def status_handler(self, intent, return_value, status, param, text=None, task_id=None):
+
         logger.debug("Intent %s", intent)
         logger.debug("Param %s", param)
         node = self.codes.get(intent).get('status')
@@ -140,10 +148,12 @@ class TaskBot(Bot):
         logger.debug("NODE: %s TYPE %s", node, type(node))
         logger.debug(node.get('return_tts.text'))
         logger.debug("return_value %s", return_value)
+        logger.debug("Task ID: %s", task_id)
         result = None
 
         if not self.bot_attributes.get('status'):  # If I am not waiting for anything from the user from last turn
             result = random.choice(node.get('return_tts.text')).format(
+                task_id=task_id,
                 value=eval(node.get('return_tts.value', '').format(
                     return_value=return_value, options=node.get('return_tts.options')
                 ))) if node.get('return_tts.value') else random.choice(node.get('return_tts.text'))
@@ -153,9 +163,12 @@ class TaskBot(Bot):
             self.params = return_value
         elif self.bot_attributes.get('status') == 'waiting-for-' + status:
             for k, p in self.compile_resolution_patterns(node.get('resolve'), value=return_value):
+                logger.debug(p.search(text))
                 if p.search(text):
                     result = node.get('return_cmd', '').format(
-                        result=json.dumps(k) if not isinstance(k, str) else k if k else p.search(text).group(0),
+                        task_id=task_id,
+                        result=json.dumps(k) if (k is not None and not isinstance(k, str)) else k if
+                        k is not None else p.search(text).group(0),
                         confirmation=random.choice(node.get('confirmation', 'null')),
                         intent=intent,
                         param=param
@@ -190,12 +203,12 @@ class TaskBot(Bot):
                 patt = patt.format(return_value=r'|'.join(value))
         except:
             pass
-   
+
         if isinstance(patt, str):
             yield None, re.compile(patt)
         elif isinstance(patt, dict):
             for k, v in patt.items():
-        #        print k ,v
+                print k ,v
                 p = re.compile(v)
                 yield k, p
 
