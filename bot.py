@@ -80,39 +80,50 @@ class TaskBot(Bot):
         except:
             pass
         if not isinstance(text, dict):
-            for task in self.bot_attributes:
-                print(">>>>>>", task)
-                if task.get('status', '').startswith('waiting'):
-                    logger.info("text: %s", text)
-                    task_id = task.get('task_id')
-                    # Get the status from the previous turn (since input text is simple string)
-                    status = task.get('status', '').split('-')[-1]
-                    logger.info("STATUS: %s", status)
-                    task_intent = (intent if (intent and intent.startswith('task')) else
-                                   task.get('action_name'))
-                    logger.debug("INTENT %s, TASK_INTENT %s", intent, task_intent)
-                    result, task_status, task_params = self.status_handler(task, task_intent, task_id=task_id,
-                                                 return_value=task.get('params'),
-                                                 param=self._code_part(text,
-                                                                       'params.place_frame') if
-                                                 self._code_part(text, 'params.place_frame') else
-                                                 task.get('params'),
-                                                 status=status, text=text)
-                    if result:
-                        task['status'] = task_status
-                        task['params'] = task_params
-                        task['action_name'] = task_intent
-                        task['task_id'] = task_id
-            logger.critical("^^^^ {}".format(self.bot_attributes))
             if not result and intent in self.codes.keys():  # and (not task.get('status') or task.get('action_name') != intent):
-                task_id = uuid.uuid4()  # New task ID
+                task_id = str(uuid.uuid4())  # New task ID
                 logger.info("Generating new task ID: %s", task_id)
                 result = code.format(confirmation=self.codes.get(intent, {}).get('confirmation', ''),
                                      user_id=self.user_id,
                                      task_id=task_id,
                                      **self.annotated_intents)
+                logger.info("New node: %s", result)
                 # Save task id in the stack
                 TASK_STACK.append(task_id)
+
+                # Append this (initialised) task to the bot_attributes
+
+                new_task = {task_id: {}}
+                self.bot_attributes.append(new_task)
+
+            if not result:
+                for task in self.bot_attributes:
+                    print(">>>>>>", task)
+                    for k, v in task.items():
+                        if v.get('status') and v.get('status', '').startswith('waiting'):
+                            logger.info("text: %s", text)
+                            task_id = k
+                            # Get the status from the previous turn (since input text is simple string)
+                            status = v.get('status', '').split('-')[-1]
+                            logger.info("STATUS: %s", status)
+                            task_intent = (intent if (intent and intent.startswith('task')) else
+                                           v.get('action_name'))
+                            logger.debug("INTENT %s, TASK_INTENT %s", intent, task_intent)
+                            result, task_status, task_params = self.status_handler(v, task_intent, task_id=task_id,
+                                                         return_value=v.get('params'),
+                                                         param=self._code_part(text,
+                                                                               'params.place_frame') if
+                                                         self._code_part(text, 'params.place_frame') else
+                                                         v.get('params'),
+                                                         status=status, text=text)
+                            logger.info("Task Outcome: %s", result)
+                            if result:
+                                values = {'status': task_status,
+                                          'params': task_params,
+                                          'action_name': task_intent,
+                                         }
+                                self.update_task(task_id, values)
+                logger.critical("^^^^ {}".format(self.bot_attributes))
 
         else:
             # First get the correct task using the provided id
@@ -123,10 +134,12 @@ class TaskBot(Bot):
 
             status = self._code_part(text, 'status')
             task_id = self._code_part(text, 'task_id')
-            task = filter(lambda x: x.get('task_id') == task_id, self.bot_attributes)
-            task = task[0] if task else {}
+            try:
+                task = [list(x.values())[0] for x in self.bot_attributes if task_id in x.keys()][0]
+            except IndexError:
+                task = {}
             # logger.debug("+++++++ %s", state.get('last_state.state.nlu.annotations.intents.intent'))
-            task_intent = intent if (intent and intent.startswith('task')) else self.bot_attributes.get('action_name')
+            task_intent = intent if (intent and intent.startswith('task')) else task.get('action_name')
             logger.debug("INTENT %s, TASK_INTENT %s", intent, task_intent)
             result, task_status, task_params = self.status_handler(task, task_intent,
                                          self._code_part(text, 'return_value'),
@@ -135,11 +148,12 @@ class TaskBot(Bot):
                                          status=status, text=text, task_id=task_id)
 
             if result:
-                task['status'] = task_status
-                task['params'] = task_params
-                task['action_name'] = task_intent
-                task['task_id'] = task_id
-            self.bot_attributes.append(task)
+                values = {'status': task_status,
+                          'params': task_params,
+                          'action_name': task_intent,
+                         }
+                self.update_task(task_id, values)
+
         try:
             result = json.loads(result)
         except:
@@ -149,6 +163,12 @@ class TaskBot(Bot):
         print "RESULT: ", result
         self.response.bot_params = self.bot_attributes
         return result
+
+    def update_task(self, task_id, values):
+        for task in self.bot_attributes:
+            for k,v in task.items():
+                if k == task_id:
+                    task.update({task_id: values})
 
     def status_handler(self, task, intent, return_value, status, param, text=None, task_id=None):
 
@@ -162,6 +182,7 @@ class TaskBot(Bot):
         logger.debug("Task ID: %s", task_id)
         result = None
         params = None
+        new_status = None
 
         if not task.get('status'):  # If I am not waiting for anything from the user from last turn
             result = random.choice(node.get('return_tts.text')).format(
@@ -171,7 +192,7 @@ class TaskBot(Bot):
                 ))) if node.get('return_tts.value') else random.choice(node.get('return_tts.text'))
 
             if 'return_cmd' in node:
-                status = 'waiting-for-' + status
+                new_status = 'waiting-for-' + status
             params = return_value
         elif task.get('status') == 'waiting-for-' + status:
             for k, p in self.compile_resolution_patterns(node.get('resolve'), value=return_value):
@@ -186,7 +207,7 @@ class TaskBot(Bot):
                         param=param
                     )
 
-        return result, status, params
+        return result, new_status, params
 
     def _code_parameters(self, input, param):
         if input.startswith('<cmd>'):
