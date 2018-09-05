@@ -88,8 +88,8 @@ class TaskBot(Bot):
                                      task_id=task_id,
                                      **self.annotated_intents)
                 logger.info("New node: %s", result)
-                # Save task id in the stack
-                TASK_STACK.append(task_id)
+                # Save task id in the stack (in the format {task_id: last question asked})
+                TASK_STACK.append({task_id: None})
 
                 # Append this (initialised) task to the bot_attributes
 
@@ -193,6 +193,11 @@ class TaskBot(Bot):
 
             if 'return_cmd' in node:
                 new_status = 'waiting-for-' + status
+                try:
+                    TASK_STACK[task_id] = value  # Also add the last question asked for this task_id to the stack
+                except:
+                    pass
+
             params = return_value
         elif task.get('status') == 'waiting-for-' + status:
             for k, p in self.compile_resolution_patterns(node.get('resolve'), value=return_value):
