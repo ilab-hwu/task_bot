@@ -4,7 +4,7 @@ import os
 import pprint
 import random
 import re
-from types import NoneType
+#from types import NoneType
 import uuid
 import yaml
 from flask import Flask, request
@@ -54,6 +54,8 @@ class TaskBot(Bot):
         # pp.pprint(request_data['current_state'])
         pp.pprint(request_data.get('current_state'))
         self.response.result = self.get_answer(request_data.get('current_state'))
+        if self.response.result:
+            self.response.lock_requested = True
 
         logger.debug("RESULT: %s", self.response.toJSON())
         # self.response.result = "do you like music"
@@ -80,7 +82,7 @@ class TaskBot(Bot):
         except:
             pass
         if not isinstance(text, dict):
-            if not result and intent in self.codes.keys():  # and (not task.get('status') or task.get('action_name') != intent):
+            if not result and intent in list(self.codes.keys()):  # and (not task.get('status') or task.get('action_name') != intent):
                 task_id = str(uuid.uuid4())  # New task ID
                 logger.info("Generating new task ID: %s", task_id)
                 result = code.format(confirmation=self.codes.get(intent, {}).get('confirmation', ''),
@@ -98,8 +100,7 @@ class TaskBot(Bot):
 
             if not result:
                 for task in self.bot_attributes:
-                    print(">>>>>>", task)
-                    for k, v in task.items():
+                    for k, v in list(task.items()):
                         if v.get('status') and v.get('status', '').startswith('waiting'):
                             logger.info("text: %s", text)
                             task_id = k
@@ -135,7 +136,7 @@ class TaskBot(Bot):
             status = self._code_part(text, 'status')
             task_id = self._code_part(text, 'task_id')
             try:
-                task = [list(x.values())[0] for x in self.bot_attributes if task_id in x.keys()][0]
+                task = [list(x.values())[0] for x in self.bot_attributes if task_id in list(x.keys())][0]
             except IndexError:
                 task = {}
             # logger.debug("+++++++ %s", state.get('last_state.state.nlu.annotations.intents.intent'))
@@ -160,13 +161,13 @@ class TaskBot(Bot):
             logger.debug("Output %s was a String", result)
 
 
-        print "RESULT: ", result
+        print("RESULT: ", result)
         self.response.bot_params = self.bot_attributes
         return result
 
     def update_task(self, task_id, values):
         for task in self.bot_attributes:
-            for k,v in task.items():
+            for k,v in list(task.items()):
                 if k == task_id:
                     task.update({task_id: values})
 
@@ -245,8 +246,8 @@ class TaskBot(Bot):
         if isinstance(patt, str):
             yield None, re.compile(patt)
         elif isinstance(patt, dict):
-            for k, v in patt.items():
-                print k ,v
+            for k, v in list(patt.items()):
+                print(k ,v)
                 p = re.compile(v)
                 yield k, p
 
@@ -255,7 +256,7 @@ api.add_resource(TaskBot, "/")
 
 
 def main():
-    app.run(host="0.0.0.0", port=5111)
+    app.run(host="0.0.0.0", port=5555)
 
 
 if __name__ == "__main__":
