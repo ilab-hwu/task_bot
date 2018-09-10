@@ -28,11 +28,10 @@ logging.basicConfig(level=logging.DEBUG,
                     )
 
 logger = logging.getLogger(__name__)
-TASK_STACK = []
+
 
 class TaskBot(Bot):
     def __init__(self):
-        # TODO: fix for multiple object generation http://flask-restful.readthedocs.io/en/0.3.5/intermediate-usage.html#passing-constructor-parameters-into-resources
         super(TaskBot, self).__init__(bot_name=BOT_NAME)
         self.status = None
         self.params = None
@@ -64,17 +63,20 @@ class TaskBot(Bot):
     def get_answer(self, state):
         result = ''
         state = DictQuery(state)
-        text = state.get('state.input.text')
+        text = state.get('state.nlu.annotations.processed_text')
         intent = state.get('state.nlu.annotations.intents.intent')
         self.annotated_intents = state.get('state.nlu.annotations.intents')
         last_bot = state.get('state.last_bot')
         self.bot_attributes = state.get('state.bot_states', {}) \
             .get(self.response.bot_name, {}) \
-            .get('bot_attributes', [])
+            .get('bot_attributes', {})
         self.user_id = state.get('user_id')
-
+        self.stack = self.bot_attributes.get('task_stack', [])
+        self.tasks = self.bot_attributes.get('tasks', [])
         code = self.codes.get(intent, {}).get('code', {})
         task_intent = ''
+
+        logger.info("Task Stask: {}".format(self.stack))
 
         # Check if the input was a user utterance or command
         try:
@@ -91,15 +93,15 @@ class TaskBot(Bot):
                                      **self.annotated_intents)
                 logger.info("New node: %s", result)
                 # Save task id in the stack (in the format {task_id: last question asked})
-                TASK_STACK.append({task_id: None})
+                self.stack.append({task_id: None})
 
                 # Append this (initialised) task to the bot_attributes
 
                 new_task = {task_id: {}}
-                self.bot_attributes.append(new_task)
+                self.tasks.append(new_task)
 
             if not result:
-                for task in self.bot_attributes:
+                for task in self.tasks:
                     for k, v in list(task.items()):
                         if v.get('status') and v.get('status', '').startswith('waiting'):
                             logger.info("text: %s", text)
@@ -124,7 +126,7 @@ class TaskBot(Bot):
                                           'action_name': task_intent,
                                          }
                                 self.update_task(task_id, values)
-                logger.critical("^^^^ {}".format(self.bot_attributes))
+                logger.critical("^^^^ {}".format(self.tasks))
 
         else:
             # First get the correct task using the provided id
@@ -136,7 +138,7 @@ class TaskBot(Bot):
             status = self._code_part(text, 'status')
             task_id = self._code_part(text, 'task_id')
             try:
-                task = [list(x.values())[0] for x in self.bot_attributes if task_id in list(x.keys())][0]
+                task = [list(x.values())[0] for x in self.tasks if task_id in list(x.keys())][0]
             except IndexError:
                 task = {}
             # logger.debug("+++++++ %s", state.get('last_state.state.nlu.annotations.intents.intent'))
@@ -162,11 +164,25 @@ class TaskBot(Bot):
 
 
         print("RESULT: ", result)
-        self.response.bot_params = self.bot_attributes
+        self.response.bot_params = {
+            'task_stack': self.stack,
+            'tasks': self.tasks
+        }
         return result
 
+    def update_stack(self, task_id, values=None, delete=False):
+        for task in self.stack:
+            for k,v in list(task.items()):
+                if k == task_id:
+                    if delete:
+                        self.stack.remove(task)
+                        self.tasks.remove(task)
+                        logger.info("Removed task {} from stack".format(k))
+                    else:
+                        task.update({task_id: values})
+
     def update_task(self, task_id, values):
-        for task in self.bot_attributes:
+        for task in self.tasks:
             for k,v in list(task.items()):
                 if k == task_id:
                     task.update({task_id: values})
@@ -194,14 +210,17 @@ class TaskBot(Bot):
 
             if 'return_cmd' in node:
                 new_status = 'waiting-for-' + status
-                try:
-                    TASK_STACK[task_id] = value  # Also add the last question asked for this task_id to the stack
-                except:
-                    pass
+                #try:
+                self.update_stack(task_id=task_id, values=result)
+                #TASK_STACK[task_id] = result  # Also add the last question asked for this task_id to the stack
+                #except:
+                #    pass
 
             params = return_value
         elif task.get('status') == 'waiting-for-' + status:
-            for k, p in self.compile_resolution_patterns(node.get('resolve'), value=return_value):
+            for k, p in self.compile_resolution_patterns(node.get('resolve'),
+                                                         value=return_value,
+                                                         frame=return_value):
                 logger.debug(p.search(text))
                 if p.search(text):
                     result = node.get('return_cmd', '').format(
@@ -212,6 +231,11 @@ class TaskBot(Bot):
                         intent=intent,
                         param=param
                     )
+
+        # If task completed succesfully - remove it from the stack
+        elif task.get('status') == 'succeeded':
+            self.update_stack(task_id=task_id, delete=True)
+
 
         return result, new_status, params
 
@@ -233,7 +257,7 @@ class TaskBot(Bot):
     #         return ' '.join(value[:-1]) + ' or ' + value[-1]
 
     @staticmethod
-    def compile_resolution_patterns(patt, value=None):
+    def compile_resolution_patterns(patt, value=None, frame=None):
         # logger.debug("patt %s value %s patt_type %s", patt, value, type(patt))
         try:
             if value and isinstance(value, str):
@@ -244,11 +268,11 @@ class TaskBot(Bot):
             pass
 
         if isinstance(patt, str):
-            yield None, re.compile(patt)
+            yield None, re.compile(patt.format(frame=frame), re.I)
         elif isinstance(patt, dict):
             for k, v in list(patt.items()):
-                print(k ,v)
-                p = re.compile(v)
+                print(k ,v.format(frame=frame))
+                p = re.compile(v.format(frame=frame), re.I)
                 yield k, p
 
 
