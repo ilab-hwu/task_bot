@@ -6,7 +6,7 @@ task_route_descr:
       return_tts:
         text:
           - "Do you mean {value}?"
-        value: '(" ".join(return_value[:-1]) + " or " + return_value[-1]) if isinstance(return_value,list) else return_value'
+        value: '(", ".join(return_value[:-1]) + " or " + return_value[-1]) if isinstance(return_value,list) else return_value'
       resolve: "({return_value})"
       return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":"{result}", "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
       confirmation:
@@ -162,7 +162,7 @@ task_route_descr:
     failed:
       return_tts:
         text:
-          - "Something went terribly wrong!"
+          - "I am sorry, that doesn't seem to work. *driver*"
     execute:
       route_description:
         resolve:
@@ -177,7 +177,7 @@ task_route_descr:
           - "Go forth then my child"
         return_tts:
           text:
-            - "{value}"
+            - "{value}. Do you think you'll be able to find it now?"
           value: '", then ".join([{options}[list(o.keys())[0]].format(**list(o.values())[0]) for o in return_value[:-1]]) + ". " + {options}[list(return_value[-1].keys())[0]].format(**list(return_value[-1].values())[0])'
           options:
             taking: "{agent} take {theme} {source}"
