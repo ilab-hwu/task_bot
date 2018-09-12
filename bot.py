@@ -55,7 +55,7 @@ class TaskBot(Bot):
         self.response.result = self.get_answer(request_data.get('current_state'))
         if self.response.result:
             self.response.lock_requested = True
-
+        logger.debug("Bot_params: {}".format(self.bot_attributes))
         return [self.response.toJSON()]
 
     def get_answer(self, state):

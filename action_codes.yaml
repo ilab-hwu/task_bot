@@ -174,7 +174,7 @@ task_route_descr:
           (do|does|am|is|are|have|has)(n't| not)|ain't))"
         return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
         confirmation:
-          - "Go forth then my child"
+          - ""
         return_tts:
           text:
             - "{value}. Do you think you'll be able to find it now?"
