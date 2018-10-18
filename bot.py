@@ -114,10 +114,13 @@ class TaskBot(Bot):
                             result, task_status, task_params = self.status_handler(v, task_intent, task_id=task_id,
                                                          return_value=v.get('params'),
                                                          param=self._code_part(text,
-                                                                               'params.place_frame') if
-                                                         self._code_part(text, 'params.place_frame') else
-                                                         v.get('params'),
-                                                         status=status, text=text)
+                                                                               'params.place_frame')
+                                                                                   if
+                                                                                   self._code_part(text,
+                                                                                                   'params.place_frame')
+                                                                                   else "",
+                                                                                   status=status,
+                                                                                   text=text)
                             logger.info("Task Outcome: %s", result)
                             if result:
                                 values = {'status': task_status,
@@ -153,14 +156,15 @@ class TaskBot(Bot):
                           'action_name': task_intent,
                          }
                 self.update_task(task_id, values)
+        while True:
+            try:
+                result = json.loads(result)
+            except:
+                logger.debug("Output %s was a String", result)
+                break
 
-        try:
-            result = json.loads(result)
-        except:
-            logger.debug("Output %s was a String", result)
 
-
-        print("RESULT: ", result)
+        print("RESULT: ", result, type(result))
         self.response.bot_params = {
             'task_stack': self.stack,
             'tasks': self.tasks
@@ -184,7 +188,7 @@ class TaskBot(Bot):
                 if k == task_id:
                     if delete:
                         self.tasks.remove(task)
-                        logger.info("Removed task {} from bot_aatributes".format(k))
+                        logger.info("Removed task {} from bot_attributes".format(k))
                     else:
                         task.update({task_id: values})
 
