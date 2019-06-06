@@ -9,7 +9,7 @@ import uuid
 import yaml
 from flask import Flask, request
 from flask_restful import Api
-
+import pprint
 from utils.abstract_classes import Bot
 from utils.dict_query import DictQuery
 
@@ -17,6 +17,7 @@ app = Flask(__name__)
 api = Api(app)
 pp = pprint.PrettyPrinter()
 BOT_NAME = 'task_bot'
+pp = pprint.PrettyPrinter(indent=4)
 
 logging.basicConfig(level=logging.DEBUG,
                     format='[%(levelname)s]: %(message)s',
@@ -63,6 +64,7 @@ class TaskBot(Bot):
         state = DictQuery(state)
         text = state.get('state.nlu.annotations.processed_text')
         intent = state.get('state.nlu.annotations.intents.intent')
+        prev_sys, prev_sys_response = list(state['last_state']['state']['response'].items())[0]
         self.annotated_intents = state.get('state.nlu.annotations.intents')
         last_bot = state.get('state.last_bot')
         self.bot_attributes = state.get('state.bot_states', {}) \
@@ -70,7 +72,7 @@ class TaskBot(Bot):
             .get('bot_attributes', {})
         self.user_id = state.get('user_id')
         self.stack = self.bot_attributes.get('task_stack', [])
-        self.tasks = self.bot_attributes.get('tasks', [])
+        #self.tasks = self.bot_attributes.get('tasks', [])
         code = self.codes.get(intent, {}).get('code', {})
         task_intent = ''
         print()
@@ -93,17 +95,25 @@ class TaskBot(Bot):
                                      **self.annotated_intents)
                 # logger.info("New node: %s", result)
                 # Save task id in the stack (in the format {task_id: last question asked})
-                self.stack.append({task_id: None})
+                self.stack.insert(0, {task_id: None})
 
                 # Append this (initialised) task to the bot_attributes
 
-                new_task = {task_id: {}}
-                self.tasks.append(new_task)
+                #new_task = {task_id: {}}
+                #self.tasks.append(new_task)
 
             if not result:
-                for task in self.tasks:
+                #for task in self.tasks:
+                for task in self.stack:
+                    found = False
                     for k, v in list(task.items()):
+                        logger.debug("TASK ID %s, STATUS %s", k, v.get('status'))
                         if v.get('status') and v.get('status', '').startswith('waiting'):
+                            text = text + " " + prev_sys_response
+                            logger.debug(f"Previous System Response: {prev_sys_response}")
+                            logger.debug(f"Concat text: {text}")
+                            logger.info("STATUS: %s", v.get('status'))
+                            logger.info("TASK ID: %s", k)
                             task_id = k
                             # Get the status from the previous turn (since input text is simple string)
                             status = v.get('status', '').split('-')[-1]
@@ -127,7 +137,12 @@ class TaskBot(Bot):
                                           'params': task_params,
                                           'action_name': task_intent,
                                          }
-                                self.update_task(task_id, values)
+                                #self.update_task(task_id, values)
+                                self.update_stack(task_id, values)
+                            found = True
+
+                    if found:
+                        break
 
         else:
             # First get the correct task using the provided id
@@ -138,9 +153,11 @@ class TaskBot(Bot):
             status = self._code_part(text, 'status')
             task_id = self._code_part(text, 'task_id')
             try:
-                task = [list(x.values())[0] for x in self.tasks if task_id in list(x.keys())][0]
+                #task = [list(x.values())[0] for x in self.tasks if task_id in list(x.keys())][0]
+                task = [list(x.values())[0] for x in self.stack if task_id in list(x.keys())][0]
             except IndexError:
                 task = {}
+            task = task if task is not None else {}
             # logger.debug("+++++++ %s", state.get('last_state.state.nlu.annotations.intents.intent'))
             task_intent = intent if (intent and intent.startswith('task')) else task.get('action_name')
             logger.debug("INTENT %s, TASK_INTENT %s", intent, task_intent)
@@ -155,7 +172,8 @@ class TaskBot(Bot):
                           'params': task_params,
                           'action_name': task_intent,
                          }
-                self.update_task(task_id, values)
+                #self.update_task(task_id, values)
+                self.update_stack(task_id, values)
         while True:
             try:
                 result = json.loads(result)
@@ -166,31 +184,34 @@ class TaskBot(Bot):
 
         print("RESULT: ", result, type(result))
         self.response.bot_params = {
-            'task_stack': self.stack,
-            'tasks': self.tasks
+            'task_stack': self.stack#,
+     #       'tasks': self.tasks
         }
         return result
 
     def update_stack(self, task_id, values=None, delete=False):
-        print(self.tasks)
+        #print(self.tasks)
         for task in self.stack:
-            for k,v in list(task.items()):
+            for k, v in list(task.items()):
                 if k == task_id:
                     if delete:
                         self.stack.remove(task)
                         logger.info("Removed task {} from stack".format(k))
                     else:
-                        task.update({task_id: values})
+                        value = task.get(task_id) if task.get(task_id) is not None else {}
+                        for k, va in list(values.items()):
+                            value[k] = va
+                        task.update({task_id: value})
 
-    def update_task(self, task_id, values=None, delete=False):
-        for task in self.tasks:
-            for k,v in list(task.items()):
-                if k == task_id:
-                    if delete:
-                        self.tasks.remove(task)
-                        logger.info("Removed task {} from bot_attributes".format(k))
-                    else:
-                        task.update({task_id: values})
+    #def update_task(self, task_id, values=None, delete=False):
+    #    for task in self.tasks:
+    #        for k,v in list(task.items()):
+    #            if k == task_id:
+    #                if delete:
+    #                    self.tasks.remove(task)
+    #                    logger.info("Removed task {} from bot_attributes".format(k))
+    #                else:
+    #                    task.update({task_id: values})
 
     def status_handler(self, task, intent, return_value, status, param, text=None, task_id=None):
 
@@ -220,7 +241,7 @@ class TaskBot(Bot):
             if 'return_cmd' in node: # and 'execute' not in status:
                 new_status = 'waiting-for-' + status
                 #try:
-                self.update_stack(task_id=task_id, values=result.split(".")[-1])
+                self.update_stack(task_id=task_id, values={"prev_response": result.split(".")[-1]})
                 #TASK_STACK[task_id] = result  # Also add the last question asked for this task_id to the stack
                 #except:
                 #    pass
@@ -230,8 +251,8 @@ class TaskBot(Bot):
             for k, p in self.compile_resolution_patterns(node.get('resolve'),
                                                          value=return_value,
                                                          frame=return_value):
-                logger.debug(p.search(text))
-                if p.search(text):
+                logger.debug(f"Searching for pattern: {p.search(text)}")
+                if p.search(text) is not None:
                     result = node.get('return_cmd', '').format(
                         task_id=task_id,
                         result=json.dumps(k) if (k is not None and not isinstance(k, str)) else k if
@@ -243,7 +264,7 @@ class TaskBot(Bot):
 
         # If task completed succesfully - remove it from the stack
         if status == 'succeeded' or status == 'failed':
-            self.update_task(task_id=task_id, delete=True)
+            #self.update_task(task_id=task_id, delete=True)
             self.update_stack(task_id=task_id, delete=True)
 
 
@@ -281,7 +302,7 @@ class TaskBot(Bot):
             yield None, re.compile(patt.format(frame=frame), re.I)
         elif isinstance(patt, dict):
             for k, v in list(patt.items()):
-                #print(k ,v.format(frame=frame))
+                print(k ,v.format(frame=frame))
                 p = re.compile(v.format(frame=frame), re.I)
                 yield k, p
 

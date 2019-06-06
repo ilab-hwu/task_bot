@@ -99,7 +99,7 @@ task_route_descr:
           (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
         return_tts:
           text:
-            - "Can you go the {value}"
+            - "Can you go the {value}?"
           value: '"{return_value}"'
         return_cmd: '{{"action":"{intent}", "params":{{}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
         confirmation:
@@ -109,6 +109,14 @@ task_route_descr:
         return_tts:
           text:
             - "I am sorry but it seems I am not able to help you at this point. Please ask the information desk for further assistance."
+      first_floor:
+        return_tts:
+          text:
+            - "{value} is on the first floor."
+            - "Since {value} is on the first floor."
+            - "{value} is upstairs."
+            - "You can find {value} upstairs."
+          value: '"{return_value}"'
       prompt_user_move_to_robot:
         return_tts:
           text:
@@ -202,7 +210,7 @@ task_robot_dance:
     succeeded:
       return_tts:
         text:
-            - "That was fun! Let's talk about something else now"
+            - "That was fun! Let's talk about something else now."
 task_robot_selfie:
   code: '{{"action": "{intent}", "params": {{}}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
   confirmation: ""
@@ -211,4 +219,38 @@ task_robot_selfie:
       return_tts:
         text:
             - ""
+task_quiz_game:
+  code: '{{"action": "{intent}", "params": {{}}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+  confirmation: ""
+  status:
+    question:
+      resolve:
+        YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+        ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+        (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)).* {frame}"
+        NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+        not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+        (do|does|am|is|are|have|has)(n't| not)|ain't)).* {frame}"
+      return_tts:
+        text:
+          - "{value}"
+        value: '"{return_value}"'
+      return_cmd: '{{"action":"{intent}", "params":{{}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+      confirmation:
+        - ''
+    verbalisation:
+      greeting:
+        return_tts:
+          text:
+            - "Let's get started with the quiz then."
+            - "I'm always happy to play a game. Let me test your knowledge."
+            - "Let's see how much you know. Let me ask you a few questions."
+      explanation:
+        return_tts:
+          text:
+            - "I will read out the questions and possible answers. Each answer has a number. To select an answer, please state the number of the answer you think is correct."
+    succeeded:
+      return_tts:
+        text:
+            - "success"
 
