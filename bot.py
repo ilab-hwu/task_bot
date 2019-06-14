@@ -64,7 +64,11 @@ class TaskBot(Bot):
         state = DictQuery(state)
         text = state.get('state.nlu.annotations.processed_text')
         intent = state.get('state.nlu.annotations.intents.intent')
-        prev_sys, prev_sys_response = list(state['last_state']['state']['response'].items())[0]
+        prev_resp_list = list(state.get('last_state', {}).get('state', {}).get('response', {}).items())
+        try:
+            prev_sys, prev_sys_response = prev_resp_list[0]
+        except IndexError:
+            prev_sys, prev_sys_response = (None, None)
         self.annotated_intents = state.get('state.nlu.annotations.intents')
         last_bot = state.get('state.last_bot')
         self.bot_attributes = state.get('state.bot_states', {}) \
@@ -85,6 +89,7 @@ class TaskBot(Bot):
             text = json.loads(text)
         except:
             pass
+        text = str(text) if isinstance(text, int) else text
         if not isinstance(text, dict):
             if not result and intent in list(self.codes.keys()):  # and (not task.get('status') or task.get('action_name') != intent):
                 task_id = str(uuid.uuid4())  # New task ID
@@ -95,6 +100,16 @@ class TaskBot(Bot):
                                      **self.annotated_intents)
                 # logger.info("New node: %s", result)
                 # Save task id in the stack (in the format {task_id: last question asked})
+                unique = self.codes.get(intent, {}).get('unique')
+                if unique is not None and unique:
+                    del_list = []
+                    for idx, task in enumerate(self.stack):
+                        t = list(task.values())[0]
+                        if "action_name" in t and t["action_name"] == intent:
+                            del_list.append(idx)
+                    for idx in del_list[::-1]:
+                        del self.stack[idx]
+
                 self.stack.insert(0, {task_id: None})
 
                 # Append this (initialised) task to the bot_attributes
@@ -109,7 +124,7 @@ class TaskBot(Bot):
                     for k, v in list(task.items()):
                         logger.debug("TASK ID %s, STATUS %s", k, v.get('status'))
                         if v.get('status') and v.get('status', '').startswith('waiting'):
-                            text = text + " " + prev_sys_response
+                            text = (text + " " + prev_sys_response) if prev_sys_response is not None else text
                             logger.debug(f"Previous System Response: {prev_sys_response}")
                             logger.debug(f"Concat text: {text}")
                             logger.info("STATUS: %s", v.get('status'))
@@ -261,12 +276,12 @@ class TaskBot(Bot):
                         intent=intent,
                         param=param
                     )
+                    break
 
         # If task completed succesfully - remove it from the stack
         if status == 'succeeded' or status == 'failed':
             #self.update_task(task_id=task_id, delete=True)
             self.update_stack(task_id=task_id, delete=True)
-
 
         return result, new_status, params
 
@@ -297,6 +312,11 @@ class TaskBot(Bot):
                 patt = patt.format(return_value=r'|'.join(value))
         except:
             pass
+
+        try:
+            frame = frame.replace('?', '\?').replace('.', '\.')
+        except AttributeError as e:
+            logger.debug("Cannot replace any punctioation symbols: %s", e)
 
         if isinstance(patt, str):
             yield None, re.compile(patt.format(frame=frame), re.I)
