@@ -221,21 +221,22 @@ task_robot_selfie:
             - ""
 task_quiz_game:
   code: '{{"action": "{intent}", "params": {{}}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+  unique: true
   confirmation: ""
   status:
     question:
       resolve:
-        YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
-        ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-        (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)).* {frame}"
-        NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
-        not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-        (do|does|am|is|are|have|has)(n't| not)|ain't)).* {frame}"
+        1: "(?:(one|1|first)).*{frame}.*"
+        2: "(?:(two|2|second)).*{frame}.*"
+        3: "(?:(three|3|third)).*{frame}.*"
+        4: "(?:(four|4|fourth)).*{frame}.*"
+        5: "(?:(five|5|fifth)).*{frame}.*"
+        6: "(?:(six|6|sixth)).*{frame}.*"
       return_tts:
         text:
           - "{value}"
         value: '"{return_value}"'
-      return_cmd: '{{"action":"{intent}", "params":{{}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+      return_cmd: '{{"action":"{intent}", "params":{{}}, "return_value":"{result}", "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
       confirmation:
         - ''
     verbalisation:
@@ -249,8 +250,38 @@ task_quiz_game:
         return_tts:
           text:
             - "I will read out the questions and possible answers. Each answer has a number. To select an answer, please state the number of the answer you think is correct."
+      correct:
+        return_tts:
+          text:
+            - "Well done, that is the correct answer!"
+            - "You are so smart. That is correct."
+            - "I didn't think that you would know that but that was the correct answer."
+            - "That is correct, well done!"
+            - "You are absolutely right."
+            - "Correct, good job."
+      wrong:
+        return_tts:
+          text:
+            - "I am sorry but that is not correct. The correct answer would have been {value}."
+            - "I am sorry but that is wrong. The correct answer would have been {value}."
+            - "Sadly, that is wrong. The correct answer would have been {value}."
+            - "Sadly, that is not correct. The correct answer would have been {value}."
+          value: '"{return_value}"'
+      move_on:
+        return_tts:
+          text:
+            - "Let's move on then."
+            - "Let's try the next question."
+            - "Here we go again."
+      final:
+        return_tts:
+          text:
+            - "Well done. Your total score is {value}."
+            - "Well done. You answered {value} questions correctly."
+            - "Well done. You knew the answers to {value} questions."
+          value: '"{return_value}"'
     succeeded:
       return_tts:
         text:
-            - "success"
+            - ""
 
