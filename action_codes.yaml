@@ -283,5 +283,5 @@ task_quiz_game:
     succeeded:
       return_tts:
         text:
-            - ""
+            - "Let's move on then. What would you like to talk about?"
 
