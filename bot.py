@@ -6,12 +6,14 @@ import random
 import re
 #from types import NoneType
 import uuid
+from argparse import ArgumentParser
 import yaml
 from flask import Flask, request
 from flask_restful import Api
 import pprint
 from utils.abstract_classes import Bot
 from utils.dict_query import DictQuery
+import utils.log
 
 app = Flask(__name__)
 api = Api(app)
@@ -30,6 +32,10 @@ logging.basicConfig(level=logging.DEBUG,
 
 logger = logging.getLogger(__name__)
 
+
+VERSION = utils.log.get_short_git_version()
+BRANCH = utils.log.get_git_branch()
+logger = utils.log.get_logger(BOT_NAME + '-' + BRANCH)
 
 class TaskBot(Bot):
     def __init__(self):
@@ -331,7 +337,15 @@ api.add_resource(TaskBot, "/")
 
 
 def main():
-    app.run(host="0.0.0.0", port=5555)
+    argp = ArgumentParser()
+    argp.add_argument('-p', '--port', type=int, default=5555)
+    argp.add_argument('-l', '--logfile', type=str, default=BOT_NAME + '.log')
+    argp.add_argument('-cv', '--console-verbosity', default='info', help='Console logging verbosity')
+    argp.add_argument('-fv', '--file-verbosity', default='debug', help='File logging verbosity')
+    args = argp.parse_args()
+    utils.log.set_logger_params(BOT_NAME + '-' + BRANCH, logfile=args.logfile,
+                                file_level=args.file_verbosity, console_level=args.console_verbosity)
+    app.run(host="0.0.0.0", port=args.port, threaded=True)
 
 
 if __name__ == "__main__":
