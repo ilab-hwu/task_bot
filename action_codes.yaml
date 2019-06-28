@@ -11,11 +11,29 @@ task_route_descr:
       return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":"{result}", "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
       confirmation:
         - 'Right! Give me a second'
-
     failure:
       return_tts:
         - "I am sorry *user_name*. I am afraid I can not do that"
     clarification:
+      list_places:
+        return_tts:
+          text:
+            - "There are {value}. Which one do you want to go to?"
+          value: '"{return_value}"'
+        resolve: "({return_value})"
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":"{result}", "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'Right! Give me a second'
+      closest:
+        return_tts:
+          text:
+            - "The closest ones are {value}. Which one do you want to go to?"
+          value: '"{return_value}"'
+        resolve: "({return_value})"
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":"{result}", "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'Right! Give me a second'
+        
       landmark:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
@@ -75,7 +93,7 @@ task_route_descr:
         return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
         confirmation:
           - 'okay'
-      ask_understant:
+      ask_understand:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
@@ -198,7 +216,7 @@ task_route_descr:
         return_tts:
           text:
             - "Ok I can see you again"
-      cabbot_find:
+      cannot_find:
         return_tts:
           text:
             - "I cannot find you, sorry"
@@ -220,6 +238,14 @@ task_route_descr:
         return_tts:
           text:
             - "Please, come in front of me"
+      max_sorry:
+        return_tts:
+          text:
+            - "I am sorry, I give up, you asked me too many times something that I don't know."
+      thinking:
+        return_tts:
+          text:
+            - "Wait, I'm thinking"
       move_again:
         return_tts:
           text:
@@ -288,10 +314,10 @@ task_route_descr:
         return_tts:
           text:
             - "I am sorry, I cannot see you. Can you come in front of me ?"
-      robot_move:
+      going_to_move:
         return_tts:
           text:
-            - "Now wait, I am going to move."
+            - "I'm going to move so I can show you"
       location_direction:
         return_tts:
           text:

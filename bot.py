@@ -111,7 +111,7 @@ class TaskBot(Bot):
                     del_list = []
                     for idx, task in enumerate(self.stack):
                         t = list(task.values())[0]
-                        if "action_name" in t and t["action_name"] == intent:
+                        if t and "action_name" in t and t["action_name"] == intent:
                             del_list.append(idx)
                     for idx in del_list[::-1]:
                         del self.stack[idx]
@@ -238,11 +238,12 @@ class TaskBot(Bot):
 
         logger.debug("Intent %s", intent)
         logger.debug("Param %s", param)
+        logger.debug(">>>> status %s", status)
         node = self.codes.get(intent).get('status')
         node = DictQuery(DictQuery(node).get(status))
         # logger.debug("NODE: %s TYPE %s", node, type(node))
         # logger.debug(node.get('return_tts.text'))
-        logger.debug("return_value %s", return_value)
+        logger.debug("return_value %s - %s", return_value, type(return_value))
         logger.debug("Task ID: %s", task_id)
         result = None
         params = None
