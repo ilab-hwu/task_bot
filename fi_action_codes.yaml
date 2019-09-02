@@ -1,0 +1,495 @@
+task_route_descr:
+  code: '{{"action": "{intent}", "params": {{"place_frame": "{param}", "person_frame": "{user_id}"}}, "confirmation":{confirmation}, "command":"execute", "task_id":"{task_id}"}}'
+  confirmation: 'null'
+  status:
+    disambiguation:
+      return_tts:
+        text:
+          - "Tarkoitatko {value}?"
+        value: '("esimerkiksi, " if len(return_value) > 2 else "") + (", ".join(return_value[:-1]) + " tai " + return_value[-1] if len(return_value) < 3 else ", ".join(return_value[:2]) + " tai " + return_value[2])  if isinstance(return_value,list) else return_value'
+      resolve: "({return_value})"
+      return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":"{result}", "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+      confirmation:
+        - 'Okei! Ihan pieni hetki!'
+    failure:
+      return_tts:
+        - "Olen pahoillani *user_name*. En pysty toteuttamaan sitä"
+    clarification:
+      list_places:
+        return_tts:
+          text:
+            - "Täällä on {value}. Mihin niistä haluat mennä?"
+          value: '("esimerkiksi, " if len(return_value) > 2 else "") + (", ".join(return_value[:-1]) + " tai " + return_value[-1] if len(return_value) < 3 else ", ".join(return_value[:2]) + " tai " + return_value[2])  if isinstance(return_value,list) else return_value'
+        resolve: "({return_value})"
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":"{result}", "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'Okei! Ihan pieni hetki!'
+      closest:
+        return_tts:
+          text:
+            - "Lähimmät ovat {value}. Mihin niistä haluat mennä?"
+          value: '("for example, " if len(return_value) > 2 else "") + (", ".join(return_value[:-1]) + " or " + return_value[-1] if len(return_value) < 3 else ", ".join(return_value[:2]) + " or " + return_value[2])  if isinstance(return_value,list) else return_value'
+        resolve: "({return_value})"
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":"{result}", "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'Okei! Pieni hetki!'
+        
+      landmark:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+        return_tts:
+          text:
+            - "Näetkö {value}?"
+          value: '"{return_value}"'
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'hienoa'
+      route_same_region:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+        return_tts:
+          text:
+            - "{value} se on lähellä. haluatko, että opastan sinut sinne?"
+          value: '"{return_value}"'
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'hienoa'
+      route_different_region:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+        return_tts:
+          text:
+            - "Se ei ole täällä. Sinun pitää {value}. Haluatko, että näytän sinulle?" 
+          value: '"{return_value}"'
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'hienoa'
+      route_confirm:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+        return_tts:
+          text:
+            - "Hahmotitko, mihin sinun pitää mennä?"
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'okay'
+      ask_understand:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+        return_tts:
+          text:
+            - "Ymmärsitkö?"
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'okay'
+      ask_explain_again:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+        return_tts:
+          text:
+            - "Selitänkö uudelleen?"
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'okay'
+      route_repeat:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+        return_tts:
+          text:
+            - "Näytänkö suunnan uudelleen ?"
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'okay'
+      ask_show_again:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+        return_tts:
+          text:
+            - "Näyttäisinkö suunnan uudelleen ?"
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'okay'
+      route_constraint:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)) .+ {frame}"
+          NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+        return_tts:
+          text:
+            - "Voitko mennä kohtaan, missä on {value}?"
+          value: '"{return_value}"'
+        return_cmd: '{{"action":"{intent}", "params":{{}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'ok'
+      ask_stairs:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)) .+ {frame}"
+          NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+        return_tts:
+          text:
+            - "Pystytkö käyttämään portaita?"
+        return_cmd: '{{"action":"{intent}", "params":{{}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'ok'
+      ask_escalator:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)) .+ {frame}"
+          NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+        return_tts:
+          text:
+            - "Voitko kulkea hissillä?"
+        return_cmd: '{{"action":"{intent}", "params":{{}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'ok'
+      no_place:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)) .+ {frame}"
+          NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+        return_tts:
+          text:
+            - "Kysymääsi paikkaa ei ole olemassa. Haluaisitko mennä jonnekin muualle?"
+        return_cmd: '{{"action":"{intent}", "params":{{}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'ok'
+      cannot_tell_seen:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)) .+ {frame}"
+          NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+        return_tts:
+          text:
+            - "Oletko nähnyt {value}? En osaa sanoa."
+          value: '"{return_value}"'
+        return_cmd: '{{"action":"{intent}", "params":{{}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'ok'
+    verbalisation:
+      where_are_u:
+        return_tts:
+          text:
+            - "Missä olet? En näe sinua"
+      found_again:
+        return_tts:
+          text:
+            - "Okei, nyt näen sinut taas"
+      cannot_find:
+        return_tts:
+          text:
+            - "En löydä sinua, anteeksi"
+      able_to_see:
+        return_tts:
+          text:
+            - "Luulisin, että näet sen paikan juuri nyt, hyvä"
+      route_verbalization:
+        return_tts:
+          text:
+            - "{value}"
+          value: '"{return_value}"'
+      route_verbalization_n_vis:
+        return_tts:
+          text:
+            - "In this direction {value}"
+          value: '"{return_value}"'
+      come:
+        return_tts:
+          text:
+            - "Tulisitko minun eteeni"
+      max_sorry:
+        return_tts:
+          text:
+            - "Anteeksi, nyt joudun luovuttamaan. Kysyit niin monta kertaa sellaista, mitä en tiedä."
+      thinking:
+        return_tts:
+          text:
+            - "Odota, mietin vähän"
+      move_again:
+        return_tts:
+          text:
+            - "Olen pahoillani, joudumme taas siirtymään"
+      cannot_show:
+        return_tts:
+          text:
+            - "Anteeksi, mutta minä luovutan. En pysty auttamaan. Toivottavasti löydät reitin. "
+      sl_sorry:
+        return_tts:
+          text:
+            - "Olen pahoillani, jos tästä ei ollut apua. Pyydä jotain ihmistä neuvomaan lisää"
+      pl_sorry:
+        return_tts:
+          text:
+            - "Olen pahoillani, jos et nähnyt. En pysty näyttämään uudelleen"
+      tell_seen:
+        return_tts:
+          text:
+            - "Tiedän, että olet nähnyt {value}"
+          value: '"{return_value}"'
+      visible_target:
+        return_tts:
+          text:
+            - "Katso, {value} se on tuolla"
+          value: '"{return_value}"'
+      not_visible_target:
+        return_tts:
+          text:
+            - "Katso, {value} se on tällä suunnalla"
+          value: '"{return_value}"'
+      hope_find_way:
+        return_tts:
+          text:
+            - "Toivottavasti löydät reitin"
+      uknown_places:
+        return_tts:
+          text:
+            - "Pyysit minua {value} kertaa opastamaan sinut paikkaan, jota en tiedä"
+          value: '"{return_value}"'
+      happy_end:
+        return_tts:
+          text:
+            - "Kiva, että pystyin olemaan avuksi"
+      ask_human:
+        return_tts:
+          text:
+            - "Olen pahoillani, mutta en pysty auttamaan sinua tässä asiassa. Ole ystävällinen ja pyydä apua infopisteestä."
+      first_floor:
+        return_tts:
+          text:
+            - "{value} on ensimmäisessä kerroksessa."
+            - "Koska {value} on ensimmäisessä kerroksessa."
+            - "{value} on yläkerrassa."
+            - " {value}on toisessa kerroksessa."
+          value: '"{return_value}"'
+      prompt_user_move_to_robot:
+        return_tts:
+          text:
+            - "Jos minä siirryn vähän, niin voit tulla tähän minun paikalleni. Tästä näkee paremmin." 
+      prompt_user_move:
+        return_tts:
+          text:
+            - "Voisitko siirtyä hieman.... niin näet paremmin mitä näytän sinulle. Menisitkö tuohon ?" 
+      user_not_visible_prompt:
+        return_tts:
+          text:
+            - "Anteeksi, mutta en pysty näkemään sinua. Voitko tulla suoraan eteeni?"
+      going_to_move:
+        return_tts:
+          text:
+            - "Minä siirryn vähän, niin pystyn näyttämään sinulle"
+      location_direction:
+        return_tts:
+          text:
+            - "{value} on lähellä. Sitä ei näe tästä, mutta se on tuossa suunnassa"
+          value: '"{return_value}"'
+      location_show:
+        return_tts:
+          text:
+            - "{value}"
+          value: '{options}[{return_value}[1]].format(v=return_value[0])'
+          options:   
+            - "Katso, {v} on tässä."
+            - "Katso, {v} on täällä."
+            - "Sinun pitää kulkea {v} läpi tästä"
+      apology:
+        return_tts:
+          text:
+            - "Voi, olen pahoillani. En ollut tarpeeksi hyvä."
+      disengage:
+        return_tts:
+          text:
+            - "Ok, harmi. Onnea !"
+      user_visible_confirmation:
+        return_tts:
+          text:
+            - "Huomaan, että olet nähnyt mihin sinun pitää mennä. Hienoa !"
+      user_not_visible_disengage:
+        return_tts:
+          text:
+            - "Olen pahoillani, en pysty näkemään sinua enää. Hei, hei."
+      max_sorry:
+        return_tts:
+          text:
+            - "Olen pahoillani. En osaa vastata. Kysyit minulta liian monta kysymystä joihin en tiedä vastausta"
+    not_found:
+      return_tts:
+        text:
+          - "En pysty tekemään tätä *driver*"
+    succeeded:
+      return_tts:
+        text:
+            - "Okei, puhutaan jostain muusta asiasta"
+    failed:
+      return_tts:
+        text:
+          - "Olen pahoillani, se ei taida onnistua. *driver*"
+    failure:
+      return_tts:
+        text:
+          - " {value}varten oleva osani on mennyt rikki"
+        value: '"{return_value}"'
+    execute:
+      route_description:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - ""
+        return_tts:
+          text:
+            - "{value}. Luuletko, että nyt pystyt löytämään sen? "
+          value: '", then ".join([{options}[list(o.keys())[0]].format(**list(o.values())[0]) for o in return_value[:-1]]) + (". " if len(return_value) > 1 else "") + {options}[list(return_value[-1].keys())[0]].format(**list(return_value[-1].values())[0])'
+          options:
+            taking: "{agent} mene {theme} {source}"
+            motion: "luota {source}, {theme} mene {direction} {distance} {area}"
+            being_located: "löydät {theme} {location}"
+task_goodbye:
+  code: '{{"action": "{intent}", "params": {{"person_frame": "{user_id}"}}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+  confirmation: "Hienoa loppupäivää sinulle ystäväni!"
+  status:
+    succeeded:
+      return_tts:
+        text:
+            - "IGNORE_ME" 
+task_robot_dance:
+  code: '{{"action": "{intent}", "params": {{}}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+  confirmation: ""
+  status:
+    succeeded:
+      return_tts:
+        text:
+            - "Se oli hauskaa! Puhutaan seuraavaksi jostain toisesta aiheesta."
+task_robot_selfie:
+  code: '{{"action": "{intent}", "params": {{}}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+  confirmation: ""
+  status:
+    succeeded:
+      return_tts:
+        text:
+            - ""
+task_quiz_game:
+  code: '{{"action": "{intent}", "params": {{}}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+  unique: true
+  confirmation: ""
+  status:
+    question:
+      resolve:
+        1: "(?:(one|1|first)).*{frame}.*"
+        2: "(?:(two|2|second)).*{frame}.*"
+        3: "(?:(three|3|third)).*{frame}.*"
+        4: "(?:(four|4|fourth)).*{frame}.*"
+        5: "(?:(five|5|fifth)).*{frame}.*"
+        6: "(?:(six|6|sixth)).*{frame}.*"
+      return_tts:
+        text:
+          - "{value}"
+        value: '"{return_value}"'
+      return_cmd: '{{"action":"{intent}", "params":{{}}, "return_value":"{result}", "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+      confirmation:
+        - ''
+    verbalisation:
+      greeting:
+        return_tts:
+          text:
+            - "No niin, aloitetaanpa sitten visailupeli."
+            - "Minusta on aina hauska pelata. Testataan vähän sinun tietojasi."
+            - "Kysyn sinulta muutaman kysymyksen, niin katsotaan kuinka hyvät tiedot sinulla on."
+      explanation:
+        return_tts:
+          text:
+            - "Luen ääneen kysymykset ja mahdolliset vastausvaihtoehdot. Jokaisella vastausvaihtoehdolla on numero. Valitse mielestäsi oikea vastausvaihtoehto sanomalla sen numero ääneen ."
+      correct:
+        return_tts:
+          text:
+            - "Loistavaa! Se on oikea vastaus!"
+            - "Oletpa fiksu! Se on oikein."
+            - "En uskonut, että tietäisit tätä, mutta se on aivan oikea vastaus!"
+            - "Hyvin vastattu. Se on oikein!"
+            - "Olet aivan oikeassa."
+            - "Oikein, hyvää työtä."
+      wrong:
+        return_tts:
+          text:
+            - "Valitettavasti se ei ollut oikea vastaus. Oikea vastaus on {value}."
+            - "Ikävä kyllä, se on väärin. Oikea vastaus olisi ollut {value}."
+            - "Harmi, mutta se on väärin. Oikea vastaus olisi ollut {value}."
+            - "Harmi, mutta se ei ole oikein. Oikea vastaus on {value}."
+          value: '"{return_value}"'
+      move_on:
+        return_tts:
+          text:
+            - "Sitten jatketaan."
+            - "Kokeillaan sitten seuraava kysymystä."
+            - "No niin, jatketaanpa."
+      final:
+        return_tts:
+          text:
+            - "Hyvin tehty. Tuloksesi on {value}oikein."
+            - "Hienoa. Vastasit {value} kysymystä oikein."
+            - "Hienoa. Oikein vastaamiesi kysymysten määrä on {value}."
+          value: '"{return_value}"'
+    succeeded:
+      return_tts:
+        text:
+            - "Siirrytään sitten eteenpäin. Mistä aiheesta haluaisit jutella?"
+
