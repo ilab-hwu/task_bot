@@ -14,6 +14,8 @@ import pprint
 from utils.abstract_classes import Bot
 from utils.dict_query import DictQuery
 import utils.log
+from argparse import ArgumentParser
+from gunicorn.app.base import BaseApplication
 
 app = Flask(__name__)
 api = Api(app)
@@ -38,16 +40,12 @@ BRANCH = utils.log.get_git_branch()
 logger = utils.log.get_logger(BOT_NAME + '-' + BRANCH)
 
 class TaskBot(Bot):
-    def __init__(self):
+    def __init__(self, **kwargs):
         super(TaskBot, self).__init__(bot_name=BOT_NAME)
         self.status = None
         self.params = None
         self._bot_par = {}
-        # self.codes = yaml.load(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'codes.yaml'))
-        with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'action_codes.yaml')) as fin:
-            self.codes = yaml.load(fin)
-
-#            print "Loaded codes: ", self.codes
+        self.codes = kwargs.get("recipies")
 
     def get(self):
         pass
@@ -334,8 +332,37 @@ class TaskBot(Bot):
                 yield k, p
 
 
-api.add_resource(TaskBot, "/")
+class StandaloneApplication(BaseApplication):
+    def __init__(self, app, options=None):
+        self.options = options or {}
+        self.application = app
+        super(StandaloneApplication, self).__init__()
 
+    def load_config(self):
+        config = dict([(key, value) for key, value in self.options.items()
+                       if key in self.cfg.settings and value is not None])
+        for key, value in config.items():
+            self.cfg.set(key.lower(), value)
+
+    def load(self):
+        logger.info("Loading recipies from file {}".format(self.options['recipe_file']))
+        with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), self.options['recipe_file'])) as fin:
+            codes = yaml.load(fin)
+
+#        log.set_logger_params(BOT_NAME + '-' + BRANCH,
+#                              logfile=self.options['logfile'],
+#                              file_level=self.options['file_verbosity'],
+#                              console_level=self.options['console_verbosity'])
+
+        api.add_resource(
+            TaskBot,
+            "/",
+            resource_class_kwargs={
+                "recipies": codes
+            }
+        )
+
+        return self.application
 
 def main():
     argp = ArgumentParser()
@@ -343,12 +370,21 @@ def main():
     argp.add_argument('-l', '--logfile', type=str, default=BOT_NAME + '.log')
     argp.add_argument('-cv', '--console-verbosity', default='info', help='Console logging verbosity')
     argp.add_argument('-fv', '--file-verbosity', default='debug', help='File logging verbosity')
+    argp.add_argument('--recipe-file', default='action_codes.yaml', help='File logging verbosity')
     args = argp.parse_args()
     utils.log.set_logger_params(BOT_NAME + '-' + BRANCH, logfile=args.logfile,
                                 file_level=args.file_verbosity, console_level=args.console_verbosity)
-    app.run(host="0.0.0.0", port=args.port, threaded=True)
 
 
+    options = {
+        'bind': '%s:%s' % ('0.0.0.0', args.port),
+        'port': args.port,
+        'file_verbosity': args.file_verbosity,
+        'logfile': args.logfile,
+        'console_verbosity': args.console_verbosity,
+        'recipe_file': args.recipe_file,
+    }
+    StandaloneApplication(app, options).run()
 if __name__ == "__main__":
     # t = TaskBot()
     main()
