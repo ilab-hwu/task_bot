@@ -11,11 +11,29 @@ task_route_descr:
       return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":"{result}", "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
       confirmation:
         - 'Right! Give me a second'
-
     failure:
       return_tts:
         - "I am sorry *user_name*. I am afraid I can not do that"
     clarification:
+      list_places:
+        return_tts:
+          text:
+            - "There are {value}. Which one do you want to go to?"
+          value: '("for example, " if len(return_value) > 2 else "") + (", ".join(return_value[:-1]) + " or " + return_value[-1] if len(return_value) < 3 else ", ".join(return_value[:2]) + " or " + return_value[2])  if isinstance(return_value,list) else return_value'
+        resolve: "({return_value})"
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":"{result}", "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'Right! Give me a second'
+      closest:
+        return_tts:
+          text:
+            - "The closest ones are {value}. Which one do you want to go to?"
+          value: '("for example, " if len(return_value) > 2 else "") + (", ".join(return_value[:-1]) + " or " + return_value[-1] if len(return_value) < 3 else ", ".join(return_value[:2]) + " or " + return_value[2])  if isinstance(return_value,list) else return_value'
+        resolve: "({return_value})"
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":"{result}", "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'Right! Give me a second'
+
       landmark:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
@@ -75,7 +93,49 @@ task_route_descr:
         return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
         confirmation:
           - 'okay'
+      ask_understand:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+        return_tts:
+          text:
+            - "Did you understand?"
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'okay'
+      ask_explain_again:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+        return_tts:
+          text:
+            - "Should I explain you the direction again ?"
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'okay'
       route_repeat:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+        return_tts:
+          text:
+            - "Should I show you the direction again ?"
+        return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'okay'
+      ask_show_again:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
@@ -104,7 +164,175 @@ task_route_descr:
         return_cmd: '{{"action":"{intent}", "params":{{}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
         confirmation:
           - 'ok'
+      ask_stairs:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)) .+ {frame}"
+          NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+        return_tts:
+          text:
+            - "Are you able to climb stairs?"
+        return_cmd: '{{"action":"{intent}", "params":{{}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'ok'
+      ask_escalator:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)) .+ {frame}"
+          NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+        return_tts:
+          text:
+            - "Can you take the escalator?"
+        return_cmd: '{{"action":"{intent}", "params":{{}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'ok'
+      no_place:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)) .+ {frame}"
+          NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+        return_tts:
+          text:
+            - "The place you asked for does not exist. Do you want to go somewhere else?"
+        return_cmd: '{{"action":"{intent}", "params":{{}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'ok'
+      cannot_tell_seen:
+        resolve:
+          YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
+          ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
+          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)) .+ {frame}"
+          NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
+          not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
+          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+        return_tts:
+          text:
+            - "Have you seen {value}? I'm not able to tell."
+          value: '"{return_value}"'
+        return_cmd: '{{"action":"{intent}", "params":{{}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+        confirmation:
+          - 'ok'
     verbalisation:
+      localising:
+        return_tts:
+          text:
+            - "I am going to my charging station now"
+      where_are_u:
+        return_tts:
+          text:
+            - "Where are you? I cannot see you"
+      found_again:
+        return_tts:
+          text:
+            - "Ok I can see you again"
+      cannot_find:
+        return_tts:
+          text:
+            - "I cannot find you, sorry"
+      able_to_see:
+        return_tts:
+          text:
+            - "I think that you're seeing the place right now, good"
+      route_verbalization:
+        return_tts:
+          text:
+            - "{value}"
+          value: '"{return_value}"'
+      route_verbalization_n_vis:
+        return_tts:
+          text:
+            - "In this direction {value}"
+          value: '"{return_value}"'
+      come:
+        return_tts:
+          text:
+            - "Please, come in front of me"
+      max_sorry:
+        return_tts:
+          text:
+            - "I am sorry, I give up, you asked me too many times something that I don't know."
+      thinking:
+        return_tts:
+          text:
+            - "Wait, I'm thinking"
+      closer:
+        return_tts:
+          text:
+            - "Can you come closer, please ?"
+      move_closer:
+        return_tts:
+          text:
+            - "Can you take another step forward, please ?"
+      stairs:
+        return_tts:
+          text:
+            - "I'm sorry, no route exists without stairs to go there"
+      no_way:
+        return_tts:
+          text:
+            - "I'm sorry, I cannot find a way to go there"
+      cannot_move:
+        return_tts:
+          text:
+            - "I'm sorry I cannot move, I'll try my best to show you from there"
+      cannot_move:
+        return_tts:
+          text:
+            - "Can you make a few steps on your {value}, please ?"
+          value: '"{return_value}"'
+      move_again:
+        return_tts:
+          text:
+            - "I am sorry, we are going to move again"
+      cannot_show:
+        return_tts:
+          text:
+            - "I am sorry, I cannot show you. I hope you will find your way"
+      sl_sorry:
+        return_tts:
+          text:
+            - "I am sorry if you did not understand. Please ask a human to help you further"
+      pl_sorry:
+        return_tts:
+          text:
+            - "I am sorry if you did not see. I will not be able to show you again"
+      tell_seen:
+        return_tts:
+          text:
+            - "I can tell that you've seen {value}"
+          value: '"{return_value}"'
+      visible_target:
+        return_tts:
+          text:
+            - "Look, {value} is there"
+          value: '"{return_value}"'
+      not_visible_target:
+        return_tts:
+          text:
+            - "Look, {value} is in this direction"
+          value: '"{return_value}"'
+      hope_find_way:
+        return_tts:
+          text:
+            - "I hope you will find your way"
+      uknown_places:
+        return_tts:
+          text:
+            - "You asked me {value} times to guide you to places I don't know"
+          value: '"{return_value}"'
+      happy_end:
+        return_tts:
+          text:
+            - "I am happy that I was able to help you"
       ask_human:
         return_tts:
           text:
@@ -129,10 +357,10 @@ task_route_descr:
         return_tts:
           text:
             - "I am sorry, I cannot see you. Can you come in front of me ?"
-      robot_move:
+      going_to_move:
         return_tts:
           text:
-            - "Now wait, I am going to move."
+            - "I'm going to move so I can show you"
       location_direction:
         return_tts:
           text:
@@ -143,7 +371,7 @@ task_route_descr:
           text:
             - "{value}"
           value: '{options}[{return_value}[1]].format(v=return_value[0])'
-          options:   
+          options:
             - "Look, {v} is here."
             - "Look, {v} is over here."
             - "You need to go through the {v} here"
@@ -170,11 +398,16 @@ task_route_descr:
     succeeded:
       return_tts:
         text:
-            - "okay, let's talk about something else"
+            - "okay, let's talk about something else. *driver*"
     failed:
       return_tts:
         text:
-          - "I am sorry, that doesn't seem to work. *driver*"
+          - "I am sorry, but I seem unable to guide you to that location at the moment. *driver*"
+    failure:
+      return_tts:
+        text:
+          - "My component for {value} has crashed"
+        value: '"{return_value}"'
     execute:
       route_description:
         resolve:
@@ -196,13 +429,13 @@ task_route_descr:
             motion: "from {source}, {theme} go {direction} {distance} {area}"
             being_located: "you can find {theme} {location}"
 task_goodbye:
-  code: '{{"action": "{intent}", "params": {{}}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
-  confirmation: ""
+  code: '{{"action": "{intent}", "params": {{"person_frame": "{user_id}"}}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+  confirmation: "Have a great day my friend!"
   status:
     succeeded:
       return_tts:
         text:
-            - "Have a great day my friend!"
+            - "IGNORE_ME" 
 task_robot_dance:
   code: '{{"action": "{intent}", "params": {{}}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
   confirmation: ""
