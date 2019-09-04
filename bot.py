@@ -23,16 +23,16 @@ pp = pprint.PrettyPrinter()
 BOT_NAME = 'task_bot'
 pp = pprint.PrettyPrinter(indent=4)
 
-logging.basicConfig(level=logging.DEBUG,
-                    format='[%(levelname)s]: %(message)s',
-                    handlers=[
-                        logging.FileHandler("{0}/{1}.log".format(os.path.dirname(os.path.abspath(__file__)),
-                                                                 BOT_NAME)),
-                        logging.StreamHandler()
-                    ]
-                    )
+#logging.basicConfig(level=logging.DEBUG,
+#                    format='[%(levelname)s]: %(message)s',
+#                    handlers=[
+#                        logging.FileHandler("{0}/{1}.log".format(os.path.dirname(os.path.abspath(__file__)),
+#                                                                 BOT_NAME)),
+                        # logging.StreamHandler()
+                    # ]
+                    # )
 
-logger = logging.getLogger(__name__)
+#logger = logging.getLogger(__name__)
 
 
 VERSION = utils.log.get_short_git_version()
@@ -270,7 +270,7 @@ class TaskBot(Bot):
         elif task.get('status') == 'waiting-for-' + status:
             for k, p in self.compile_resolution_patterns(node.get('resolve'),
                                                          value=return_value,
-                                                         frame=return_value):
+                                                         frame=node.get('return_tts.options', {}).get(return_value) if node.get('return_tts.options') is not None else return_value):
                 logger.debug(f"Searching for pattern: {p.search(text)}")
                 if p.search(text) is not None:
                     result = node.get('return_cmd', '').format(

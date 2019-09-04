@@ -38,10 +38,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "Näetkö {value}?"
@@ -53,10 +53,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "{value} se on lähellä. haluatko, että opastan sinut sinne?"
@@ -68,10 +68,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "Se ei ole täällä. Sinun pitää {value}. Haluatko, että näytän sinulle?" 
@@ -83,10 +83,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "Hahmotitko, mihin sinun pitää mennä?"
@@ -97,10 +97,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "Ymmärsitkö?"
@@ -111,10 +111,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "Selitänkö uudelleen?"
@@ -125,10 +125,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "Näytänkö suunnan uudelleen ?"
@@ -139,10 +139,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "Näyttäisinkö suunnan uudelleen ?"
@@ -153,14 +153,18 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
-            - "Voitko mennä kohtaan, missä on {value}?"
-          value: '"{return_value}"'
+            - "Voitko käyttää {value}?"
+          value: '{options}[return_value]'
+          options:
+            escalator: "liukuportaita"
+            stairs: "portaita"
+            elevator: "hissiä"
         return_cmd: '{{"action":"{intent}", "params":{{}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
         confirmation:
           - 'ok'
@@ -168,10 +172,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "Pystytkö käyttämään portaita?"
@@ -182,10 +186,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "Voitko kulkea hissillä?"
@@ -196,10 +200,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "Kysymääsi paikkaa ei ole olemassa. Haluaisitko mennä jonnekin muualle?"
@@ -210,10 +214,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "Oletko nähnyt {value}? En osaa sanoa."
@@ -312,9 +316,9 @@ task_route_descr:
         return_tts:
           text:
             - "{value} on ensimmäisessä kerroksessa."
-            - "Koska {value} on ensimmäisessä kerroksessa."
+            #- "Koska {value} on ensimmäisessä kerroksessa."
             - "{value} on yläkerrassa."
-            - " {value}on toisessa kerroksessa."
+            - "{value} on toisessa kerroksessa."
           value: '"{return_value}"'
       prompt_user_move_to_robot:
         return_tts:
@@ -388,21 +392,22 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
         confirmation:
           - ""
         return_tts:
           text:
-            - "{value}. Luuletko, että nyt pystyt löytämään sen? "
-          value: '", then ".join([{options}[list(o.keys())[0]].format(**list(o.values())[0]) for o in return_value[:-1]]) + (". " if len(return_value) > 1 else "") + {options}[list(return_value[-1].keys())[0]].format(**list(return_value[-1].values())[0])'
-          options:
-            taking: "{agent} mene {theme} {source}"
-            motion: "luota {source}, {theme} mene {direction} {distance} {area}"
-            being_located: "löydät {theme} {location}"
+            - "{value}. Luuletko löytäväsi sen nyt?"
+          value: '"{return_value}"'
+          #value: '". ".join([{options}[list(o.keys())[0]].format(**list(o.values())[0]) for o in return_value[:-1]]).strip() + (". " if len(return_value) > 1 else "") + {options}[list(return_value[-1].keys())[0]].format(**list(return_value[-1].values())[0])'
+          #options:
+            #taking: "Walk first {source}"
+            #motion: "At {source} {theme} walk {direction} {distance} {area}"
+            #being_located: "You will find the {theme} {location}"
 task_goodbye:
   code: '{{"action": "{intent}", "params": {{"person_frame": "{user_id}"}}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
   confirmation: "Hienoa loppupäivää sinulle ystäväni!"
@@ -434,16 +439,17 @@ task_quiz_game:
   status:
     question:
       resolve:
-        1: "(?:(one|1|first)).*{frame}.*"
-        2: "(?:(two|2|second)).*{frame}.*"
-        3: "(?:(three|3|third)).*{frame}.*"
-        4: "(?:(four|4|fourth)).*{frame}.*"
-        5: "(?:(five|5|fifth)).*{frame}.*"
-        6: "(?:(six|6|sixth)).*{frame}.*"
+        1: "(?:(one|1|first)).*"
+        2: "(?:(two|2|second)).*"
+        3: "(?:(three|3|third)).*"
+        4: "(?:(four|4|fourth)).*"
+        5: "(?:(five|5|fifth)).*"
+        6: "(?:(six|6|sixth)).*"
       return_tts:
         text:
           - "{value}"
-        value: '"{return_value}"'
+        #value: '"{return_value}"'
+        value: "return_value[0] + ' ' +  ', '.join(return_value[1:-1]) + ' tai ' + return_value[-1]"
       return_cmd: '{{"action":"{intent}", "params":{{}}, "return_value":"{result}", "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
       confirmation:
         - ''
