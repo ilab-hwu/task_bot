@@ -128,9 +128,9 @@ class TaskBot(Bot):
                     for k, v in list(task.items()):
                         logger.debug("TASK ID %s, STATUS %s", k, v.get('status'))
                         if v.get('status') and v.get('status', '').startswith('waiting'):
-                            text = (text + " " + prev_sys_response) if prev_sys_response is not None else text
-                            logger.debug(f"Previous System Response: {prev_sys_response}")
-                            logger.debug(f"Concat text: {text}")
+                            # text = (text + " " + prev_sys_response) if prev_sys_response is not None else text
+                            # logger.debug(f"Previous System Response: {prev_sys_response}")
+                            # logger.debug(f"Concat text: {text}")
                             logger.info("STATUS: %s", v.get('status'))
                             logger.info("TASK ID: %s", k)
                             task_id = k
