@@ -32,7 +32,7 @@ logging.basicConfig(level=logging.DEBUG,
                     ]
                     )
 
-logger = logging.getLogger(__name__)
+# logger = logging.getLogger(__name__)
 
 
 VERSION = utils.log.get_short_git_version()
@@ -166,10 +166,8 @@ class TaskBot(Bot):
         else:
             # First get the correct task using the provided id
 
-
-            logger.info("STATUS %s", self._code_part(text, 'status'))
-
             status = self._code_part(text, 'status')
+            logger.info("STATUS %s", status)
             task_id = self._code_part(text, 'task_id')
             try:
                 #task = [list(x.values())[0] for x in self.tasks if task_id in list(x.keys())][0]
@@ -239,7 +237,7 @@ class TaskBot(Bot):
         logger.debug(">>>> status %s", status)
         node = self.codes.get(intent).get('status')
         node = DictQuery(DictQuery(node).get(status))
-        # logger.debug("NODE: %s TYPE %s", node, type(node))
+        logger.debug("NODE: %s TYPE %s", node, type(node))
         # logger.debug(node.get('return_tts.text'))
         logger.debug("return_value %s - %s", return_value, type(return_value))
         logger.debug("Task ID: %s", task_id)
@@ -248,7 +246,8 @@ class TaskBot(Bot):
         new_status = None
         logger.debug("Status: {} | task_status: {}".format(status, task.get('status')))
 
-        if not task.get('status'):  # If I am not waiting for anything from the user from last turn
+        if not task.get('status'): # or status:  # If I am not waiting for anything from the user from last turn or supervisor sent a new (overriding) status
+            logger.debug("Found a new status")
             result = random.choice(node.get('return_tts.text')).format(
                 task_id=task_id,
                 value=eval(node.get('return_tts.value', '').format(
@@ -268,6 +267,7 @@ class TaskBot(Bot):
 
             params = return_value
         elif task.get('status') == 'waiting-for-' + status:
+            logger.debug("Found waiting for status")
             for k, p in self.compile_resolution_patterns(node.get('resolve'),
                                                          value=return_value,
                                                          frame=return_value):

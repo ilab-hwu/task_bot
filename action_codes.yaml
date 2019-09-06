@@ -1,6 +1,6 @@
 task_route_descr:
-  code: '{{"action": "{intent}", "params": {{"place_frame": "{param}", "person_frame": "{user_id}"}}, "confirmation":{confirmation}, "command":"execute", "task_id":"{task_id}"}}'
-  confirmation: 'null'
+  code: '{{"action": "{intent}", "params": {{"place_frame": "{param}", "person_frame": "{user_id}"}}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+  confirmation: 'OK'
   status:
     disambiguation:
       return_tts:
@@ -38,10 +38,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "Do you see {value}?"
@@ -53,10 +53,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "{value} is nearby. do you want me to guide you?"
@@ -68,10 +68,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "It's not here. You need to {value}. Would you like me to show you?" 
@@ -83,10 +83,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "Have you seen where you have to go ?"
@@ -97,10 +97,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "Did you understand?"
@@ -111,10 +111,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "Should I explain you the direction again ?"
@@ -125,10 +125,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "Should I show you the direction again ?"
@@ -139,10 +139,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "Should I show you the direction again ?"
@@ -153,10 +153,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "Can you go the {value}?"
@@ -168,10 +168,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "Are you able to climb stairs?"
@@ -182,10 +182,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "Can you take the escalator?"
@@ -196,10 +196,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
             - "The place you asked for does not exist. Do you want to go somewhere else?"
@@ -210,18 +210,47 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_tts:
           text:
-            - "Have you seen {value}? I'm not able to tell."
+            - "Do you know where to go from here to get to {value} now?"
+            - "Is {value} visible to you now?"
           value: '"{return_value}"'
         return_cmd: '{{"action":"{intent}", "params":{{}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
         confirmation:
           - 'ok'
     verbalisation:
+      get_attention:
+        return_tts:
+          text:
+            - "Hey, are you listening ?"
+      continue_anyway:
+        return_tts:
+          text:
+            - "Ok, I'll continue anyway"
+      no_place:
+        return_tts:
+          text:
+            - "I am sorry but that place does not exists. Maybe I misunderstood you."
+      step_left:
+        return_tts:
+          text:
+            - "Can you make a few steps on your left, please ?"
+      step_right:
+        return_tts:
+          text:
+            - "Can you make a few steps on your right, please ?"
+      step_more_left:
+        return_tts:
+          text:
+            - "Can you move a bit more on your left, please ?"
+      step_more_right:
+        return_tts:
+          text:
+            - "Can you move a bit more on your right, please ?"
       localising:
         return_tts:
           text:
@@ -413,21 +442,21 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (do|does|am|is|are|have|has)).*{frame}"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't)).*{frame}"
         return_cmd: '{{"action":"{intent}", "params":{{"place_frame":"{param}"}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
         confirmation:
           - ""
         return_tts:
           text:
             - "{value}. Do you think you'll be able to find it now?"
-          value: '", then ".join([{options}[list(o.keys())[0]].format(**list(o.values())[0]) for o in return_value[:-1]]) + (". " if len(return_value) > 1 else "") + {options}[list(return_value[-1].keys())[0]].format(**list(return_value[-1].values())[0])'
+          value: '". ".join([{options}[list(o.keys())[0]].format(**list(o.values())[0]) for o in return_value[:-1]]).strip() + (". " if len(return_value) > 1 else "") + {options}[list(return_value[-1].keys())[0]].format(**list(return_value[-1].values())[0])'
           options:
-            taking: "{agent} go to {theme} {source}"
-            motion: "from {source}, {theme} go {direction} {distance} {area}"
-            being_located: "you can find {theme} {location}"
+            taking: "Walk first {source}"
+            motion: "At {source} {theme} walk {direction} {distance} {area}"
+            being_located: "You will find the {theme} {location}"
 task_goodbye:
   code: '{{"action": "{intent}", "params": {{"person_frame": "{user_id}"}}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
   confirmation: "Have a great day my friend!"
