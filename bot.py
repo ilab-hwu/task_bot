@@ -23,14 +23,14 @@ pp = pprint.PrettyPrinter()
 BOT_NAME = 'task_bot'
 pp = pprint.PrettyPrinter(indent=4)
 
-logging.basicConfig(level=logging.DEBUG,
-                    format='[%(levelname)s]: %(message)s',
-                    handlers=[
-                        logging.FileHandler("{0}/{1}.log".format(os.path.dirname(os.path.abspath(__file__)),
-                                                                 BOT_NAME)),
-                        logging.StreamHandler()
-                    ]
-                    )
+# logging.basicConfig(level=logging.DEBUG,
+                    # format='[%(levelname)s]: %(message)s',
+                    # handlers=[
+                        # logging.FileHandler("{0}/{1}.log".format(os.path.dirname(os.path.abspath(__file__)),
+                                                                 # BOT_NAME)),
+                        # logging.StreamHandler()
+                    # ]
+                    # )
 
 # logger = logging.getLogger(__name__)
 
@@ -66,7 +66,8 @@ class TaskBot(Bot):
     def get_answer(self, state):
         result = ''
         state = DictQuery(state)
-        text = state.get('state.nlu.annotations.processed_text')
+        # text = state.get('state.nlu.annotations.processed_text')
+        text = state.get('state.input.text')
         intent = state.get('state.nlu.annotations.intents.intent')
         prev_resp_list = list(state.get('last_state', {}).get('state', {}).get('response', {}).items())
         try:
@@ -128,9 +129,9 @@ class TaskBot(Bot):
                     for k, v in list(task.items()):
                         logger.debug("TASK ID %s, STATUS %s", k, v.get('status'))
                         if v.get('status') and v.get('status', '').startswith('waiting'):
-                            text = (text + " " + prev_sys_response) if prev_sys_response is not None else text
-                            logger.debug(f"Previous System Response: {prev_sys_response}")
-                            logger.debug(f"Concat text: {text}")
+#                            text = (text + " " + prev_sys_response) if prev_sys_response is not None else text
+#                            logger.debug(f"Previous System Response: {prev_sys_response}")
+#                            logger.debug(f"Concat text: {text}")
                             logger.info("STATUS: %s", v.get('status'))
                             logger.info("TASK ID: %s", k)
                             task_id = k
@@ -220,18 +221,7 @@ class TaskBot(Bot):
                             value[k] = va
                         task.update({task_id: value})
 
-    #def update_task(self, task_id, values=None, delete=False):
-    #    for task in self.tasks:
-    #        for k,v in list(task.items()):
-    #            if k == task_id:
-    #                if delete:
-    #                    self.tasks.remove(task)
-    #                    logger.info("Removed task {} from bot_attributes".format(k))
-    #                else:
-    #                    task.update({task_id: values})
-
     def status_handler(self, task, intent, return_value, status, param, text=None, task_id=None):
-
         logger.debug("Intent %s", intent)
         logger.debug("Param %s", param)
         logger.debug(">>>> status %s", status)
@@ -283,7 +273,7 @@ class TaskBot(Bot):
                     )
                     break
 
-        # If task completed succesfully - remove it from the stack
+       # If task completed succesfully - remove it from the stack
         if status == 'succeeded' or status == 'failed':
             #self.update_task(task_id=task_id, delete=True)
             self.update_stack(task_id=task_id, delete=True)
@@ -299,13 +289,6 @@ class TaskBot(Bot):
         if isinstance(input, dict):
             input = DictQuery(input)
             return input.get(key)
-
-    # @staticmethod
-    # def _ensure_return_value_type(value):
-    #     if isinstance(value, str):
-    #         return value
-    #     elif isinstance(value, list):
-    #         return ' '.join(value[:-1]) + ' or ' + value[-1]
 
     @staticmethod
     def compile_resolution_patterns(patt, value=None, frame=None):
@@ -349,10 +332,6 @@ class StandaloneApplication(BaseApplication):
         with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), self.options['recipe_file'])) as fin:
             codes = yaml.load(fin)
 
-#        log.set_logger_params(BOT_NAME + '-' + BRANCH,
-#                              logfile=self.options['logfile'],
-#                              file_level=self.options['file_verbosity'],
-#                              console_level=self.options['console_verbosity'])
 
         api.add_resource(
             TaskBot,
