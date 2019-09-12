@@ -66,7 +66,8 @@ class TaskBot(Bot):
     def get_answer(self, state):
         result = ''
         state = DictQuery(state)
-        text = state.get('state.nlu.annotations.processed_text')
+        # text = state.get('state.nlu.annotations.processed_text')
+        text = state.get('state.input.text')
         intent = state.get('state.nlu.annotations.intents.intent')
         prev_resp_list = list(state.get('last_state', {}).get('state', {}).get('response', {}).items())
         try:
@@ -200,6 +201,7 @@ class TaskBot(Bot):
                 logger.debug("Output %s was a String", result)
                 break
 
+        # self.stack_cleanup()
 
         print("RESULT: ", result, type(result))
         self.response.bot_params = {
@@ -221,6 +223,14 @@ class TaskBot(Bot):
                         for k, va in list(values.items()):
                             value[k] = va
                         task.update({task_id: value})
+
+    def stack_cleanup(self):
+        """Remove all None tasks from the stack"""
+        for task in self.stack:
+            for k, v in list(task.items()):
+                if v == None:
+                    self.stack.remove(task)
+                    logger.debug(f"Removed task {k} from stack as it was empty")
 
     #def update_task(self, task_id, values=None, delete=False):
     #    for task in self.tasks:
