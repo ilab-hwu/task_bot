@@ -127,7 +127,11 @@ class TaskBot(Bot):
                 for task in self.stack:
                     found = False
                     for k, v in list(task.items()):
-                        logger.debug("TASK ID %s, STATUS %s", k, v.get('status'))
+                        try:  # a try/except to handle failed tasks remnants in the stack
+                            logger.debug("TASK ID %s, STATUS %s", k, v.get('status'))
+                        except AttributeError:
+                            continue
+
                         if v.get('status') and v.get('status', '').startswith('waiting'):
                             # text = (text + " " + prev_sys_response) if prev_sys_response is not None else text
                             # logger.debug(f"Previous System Response: {prev_sys_response}")
