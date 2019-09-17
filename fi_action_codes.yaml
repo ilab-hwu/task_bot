@@ -1,6 +1,6 @@
 task_route_descr:
-  code: '{{"action": "{intent}", "params": {{"place_frame": "{param}", "person_frame": "{user_id}"}}, "confirmation":{confirmation}, "command":"execute", "task_id":"{task_id}"}}'
-  confirmation: 'null'
+  code: '{{"action": "{intent}", "params": {{"place_frame": "{param}", "person_frame": "{user_id}"}}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
+  confirmation: 'Okei'
   status:
     disambiguation:
       return_tts:
@@ -378,6 +378,9 @@ task_route_descr:
       return_tts:
         text:
             - "Okei, puhutaan jostain muusta asiasta"
+    preempted:
+      return_tts:
+        text: "IGNORE_ME" 
     failed:
       return_tts:
         text:
