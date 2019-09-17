@@ -236,7 +236,7 @@ class TaskBot(Bot):
         new_status = None
         logger.debug("Status: {} | task_status: {}".format(status, task.get('status')))
 
-        if not task.get('status'): # or status:  # If I am not waiting for anything from the user from last turn or supervisor sent a new (overriding) status
+        if not task.get('status') or status in ("succeded", "preempted", "failed"):  # If I am not waiting for anything from the user from last turn or supervisor sent a new (overriding) status
             logger.debug("Found a new status")
             result = random.choice(node.get('return_tts.text')).format(
                 task_id=task_id,
