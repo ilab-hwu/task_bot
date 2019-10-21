@@ -16,6 +16,6 @@ requests==2.18.4
 six==1.11.0
 urllib3==1.22
 utils==0.0.1
-Werkzeug==0.14.1
+Werkzeug==0.15.3
 yarg==0.1.9
 git+https://github.com/ilab-hwu/alana_utils.git
