@@ -37,10 +37,10 @@ task_route_descr:
         resolve:
           YES: "^(?:(fine|yes|yeah|yea|yep|aye|okay|ok|sure)( (fine|yes|yeah|yea|yep|aye|okay|ok|sure))*( please)?|
           ((yes|yeah|yea|yep|aye|ok|okay) )*(sure thing|i guess( so)?|go ahead|i would like that)|((yes|yeah|yea|yep|aye|ok|okay) )*
-          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has)) .+ {frame}"
+          (i|you|he|she|it|we|they) (can|do|does|am|is|are|have|has))"
           NO: "^(?:(i do not|no|nah|nope)( (no|nah|nope))*|((no|nah|nope) )*(?:absolutely|certainly|of course|probably|i guess)
           not|no way|((no|nah|nope) )*(i|we) do not want to((no|nah|nope) )*(i|you|he|she|it|we|they) (
-          (do|does|am|is|are|have|has)(n't| not)|ain't)) .+ {frame}"
+          (do|does|am|is|are|have|has)(n't| not)|ain't))"
         return_tts:
           text:
             - "Tarkoitatko {value}?"
@@ -235,13 +235,13 @@ task_route_descr:
           (do|does|am|is|are|have|has)(n't| not)|ain't))"
         return_tts:
           text:
-            - "Oletko nähnyt {value}? En osaa sanoa."
+            - "näetkö sen {value}?"
           value: '"{return_value}"'
         return_cmd: '{{"action":"{intent}", "params":{{}}, "return_value":{result}, "confirmation":"{confirmation}", "command":"execute", "task_id":"{task_id}"}}'
         confirmation:
           - 'ok'
     verbalisation:
-      explain_route::
+      explain_route:
         return_tts:
           text:
             - "Nyt kerron sinulle reitin"
@@ -269,7 +269,7 @@ task_route_descr:
       route_verbalization_n_vis:
         return_tts:
           text:
-            - "In this direction {value}"
+            - "Tässä suunnassa {value}"
           value: '"{return_value}"'
       come:
         return_tts:
