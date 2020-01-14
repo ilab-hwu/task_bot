@@ -87,7 +87,7 @@ class TaskBot(Bot):
         print()
         logger.info("==================================")
         logger.info("Input: {}".format(text))
-        logger.debug("Task Stask: {}".format(self.stack))
+        #logger.debug("Task Stask: {}".format(self.stack))
 
         # Check if the input was a user utterance or command
         try:
@@ -252,8 +252,8 @@ class TaskBot(Bot):
         logger.debug("Param %s", param)
         logger.debug(">>>> status %s", status)
         node = self.codes.get(intent).get('status')
+#        logger.debug(f"Node: {node}")
         node = DictQuery(DictQuery(node).get(status))
-        logger.debug("NODE: %s TYPE %s", node, type(node))
         logger.debug(node.get('return_tts.text'))
         logger.debug("return_value %s - %s", return_value, type(return_value))
         logger.debug("Task ID: %s", task_id)
